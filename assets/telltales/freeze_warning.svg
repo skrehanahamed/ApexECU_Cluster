@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <!-- 6-branch symmetrical automotive snowflake -->
+  <line x1="12" y1="2" x2="12" y2="22" />
+  <line x1="2" y1="12" x2="22" y2="12" />
+  <line x1="4.93" y1="4.93" x2="19.07" y2="19.07" />
+  <line x1="19.07" y1="4.93" x2="4.93" y2="19.07" />
+  <!-- Branch barbs -->
+  <polyline points="10 4 12 2 14 4" />
+  <polyline points="10 20 12 22 14 20" />
+  <polyline points="4 10 2 12 4 14" />
+  <polyline points="20 10 22 12 20 14" />
+  <polyline points="6.5 4.5 4.93 4.93 5.36 7.0" />
+  <polyline points="17.5 19.5 19.07 19.07 18.64 17.0" />
+  <polyline points="17.5 4.5 19.07 4.93 18.64 7.0" />
+  <polyline points="6.5 19.5 4.93 19.07 5.36 17.0" />
+</svg>

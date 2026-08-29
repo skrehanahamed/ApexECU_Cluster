@@ -1,0 +1,64 @@
+# =========================================================================
+# ApexECU_Cluster .gitignore
+# =========================================================================
+
+# Build Directories & Artifacts
+build/
+bin/
+out/
+*.app/
+*.dSYM/
+
+# CMake Generated Files
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+*.cmake
+!CMakeLists.txt
+!Makefile
+
+# Qt Generated & Cache Files
+*.moc
+moc_*.cpp
+moc_*.h
+qrc_*.cpp
+ui_*.h
+*.qmlc
+*.jsc
+.rcc/
+.qt/
+.qt_for_python/
+*.aotstats
+
+# Object & Binary Files
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.dylib
+*.dll
+*.exe
+
+# macOS System Files
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# IDE & Editor Files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+.qtcreator/
+*.creator*
+*.user
+*.user.*
+
+# Logs & Temporary Files
+*.log
+*.tmp
+scratch/
