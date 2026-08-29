@@ -224,8 +224,20 @@ cmake --build .
 
 ---
 
-## 👤 Author
+## 👤 Author & Acknowledgments
+
 * **SK Rehan Ahamed** — [@skrehanahamed](https://github.com/skrehanahamed)
+
+### 💖 AI Collaborators & Engineering Credits
+Created with ❤️ by **SK Rehan Ahamed** in creative collaboration with **Antigravity**, **Gemini**, and **ChatGPT**.
+
+---
 
 ## 📜 License
 Distributed under the MIT License. See `LICENSE` for more information.
+
+<br/>
+
+<p align="center">
+  <sub>Crafted with passion, modern C++, and Qt 6 Quick for the future of Automotive UX.</sub>
+</p>
