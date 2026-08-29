@@ -40,6 +40,103 @@ A high-fidelity, luxury **Automotive Digital Instrument Cluster** and interactiv
 
 ---
 
+## 🏗️ System Architecture
+
+```mermaid
+flowchart TB
+    subgraph CoreEngine["⚡ C++ Core Engine & Platform Layer"]
+        MainCPP["main.cpp<br/>(QGuiApplication & QQmlApplicationEngine)"]
+        AudioEngine["ClusterAudio.h<br/>(Asynchronous Audio Engine)"]
+    end
+
+    subgraph ECUController["🎛️ ECU Telemetry & Simulator Window"]
+        EcuPanel["EcuEmulatorPanel.qml<br/>• Speed & Power Telemetry<br/>• Gear & Drive Mode Select<br/>• Driver Assist (ADAS) Controls<br/>• 21-Card Warning Injector<br/>• Ambient Temperature Slider"]
+    end
+
+    subgraph MasterQML["🖥️ Main Cluster Presentation Layer (Main.qml)"]
+        Welcome["WelcomeScreen.qml<br/>• Vehicle Silhouette<br/>• APEX Wordmark Illuminator<br/>• Startup Chime Trigger"]
+        ClusterView["DrivingCluster.qml<br/>(Master State Machine)"]
+    end
+
+    subgraph ClusterComponents["🚗 Digital Cluster Components"]
+        TopBar["TopStatusBar.qml<br/>• Clock & Drive Mode<br/>• Driver Assist (ON/OFF)<br/>• Ambient Temp & Freeze ❄"]
+        CenterSpeed["CentralSpeed.qml<br/>• Dead-Centered Speed<br/>• Side Speed Limit Sign<br/>• APEX Emblem"]
+        Road3D["AdasRoadView.qml<br/>• Perspective 3D Road<br/>• Radar Target Tracking<br/>• Pass-By Traffic Sim<br/>• Collision Distance Meter"]
+        PowerGauge["PowerGauge.qml<br/>• 0-300 kW Power<br/>• Regenerative Arc"]
+        TempGauge["BatteryTempGauge.qml<br/>• Pack Thermal Health<br/>• Trip Computer"]
+        Telltales["TelltaleBar.qml<br/>• 21 ISO Telltales<br/>• Bulb-Check Self-Test"]
+        BottomBar["BottomInfoBar.qml<br/>• Battery SOC & Range<br/>• Gear PRND Selector<br/>• Horizon Line Divider"]
+    end
+
+    subgraph AssetDeck["🎨 Asset & Media Deck"]
+        AudioWav["assets/audio/<br/>• Crystal Chime<br/>• Electric SUV Rev<br/>• Critical / Warning Beeps"]
+        WarningCards["assets/warnings/<br/>• 21 APEX Alert Cards"]
+        VectorSVG["assets/telltales/<br/>• 34 ISO SVG Telltales<br/>• Freeze Snowflake ❄"]
+        Vehicles["assets/vehicles/<br/>• SUV Model & Traffic"]
+        Wallpapers["assets/wallpapers/<br/>• 3 Scenic Environments"]
+    end
+
+    MainCPP -->|Injects Context Property| AudioEngine
+    MainCPP -->|Loads QML Trees| MasterQML
+    MainCPP -->|Spawns Secondary Window| ECUController
+
+    EcuPanel <-->|Bi-directional Telemetry Binding| ClusterView
+
+    MasterQML -->|Coordinates State| Welcome
+    MasterQML -->|Bootup Transition| ClusterView
+
+    ClusterView --> TopBar
+    ClusterView --> CenterSpeed
+    ClusterView --> Road3D
+    ClusterView --> PowerGauge
+    ClusterView --> TempGauge
+    ClusterView --> Telltales
+    ClusterView --> BottomBar
+
+    AudioEngine -.-> AudioWav
+    ClusterView -.-> WarningCards
+    Telltales -.-> VectorSVG
+    Road3D -.-> Vehicles
+    ClusterView -.-> Wallpapers
+```
+
+---
+
+## 🔄 Bootup & Spacebar Reboot Lifecycle
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Driver as 👤 User / Driver
+    participant Main as 🖥️ Main.qml
+    participant Audio as 🔊 ClusterAudio
+    participant Welcome as 🌌 WelcomeScreen
+    participant Cluster as 🏎️ DrivingCluster
+    participant Gauges as 📊 Gauges & Telltales
+    participant ADAS as 🛣️ Driver Assist (ADAS)
+
+    Driver->>Main: Press [Space] or Launch App
+    Main->>Main: Full Zero-State Reset
+    Main->>Audio: playStartupChime() (Crystal Bell Signature)
+    Main->>Welcome: restartSequence() (Vehicle Silhouette -> APEX Wordmark -> Ready)
+    
+    Note over Main,Welcome: 3.5s Welcome Duration (or instant skip on Enter/Click)
+
+    Main->>Cluster: clusterTransitionAnim (Fade in Cluster UI)
+    Main->>Audio: playEngineRev() (Electric Performance SUV Surge)
+    Cluster->>Gauges: startupSelfTestAnim (Power 300kW, Speed 188km/h, Temp 85°C Sweep)
+    Cluster->>Gauges: Bulb Check (All 21 Telltales ON)
+    
+    Note over Gauges: Gauges peak-hold and smoothly sweep back to 0
+    
+    Cluster->>Gauges: Bulb Check Complete (Telltales OFF, Park Brake ON)
+    Cluster->>ADAS: Road View & Multi-Environment Scenery gracefully fade in (opacity -> 1.0)
+    Cluster->>Cluster: Speed Limit Badge (80) pops into view on side
+    Note over ADAS,Cluster: System Ready & Driver Assist Active
+```
+
+---
+
 ## 🎹 Keyboard Shortcuts
 
 | Key | Action |
