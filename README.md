@@ -10,6 +10,26 @@ A high-fidelity, luxury **Automotive Digital Instrument Cluster** and interactiv
 
 ---
 
+## Preview & Media Showcase
+
+### Application Demo Video
+<!-- Paste your YouTube / MP4 video link or animated GIF preview below -->
+[![Watch Demo Video](https://raw.githubusercontent.com/skrehanahamed/ApexECU_Cluster/main/docs/media/video_thumbnail_placeholder.png)](https://github.com/skrehanahamed/ApexECU_Cluster)
+
+*Demo video placeholder: Replace the link above with your live demo video, screen recording, or animated GIF.*
+
+### User Interface Screenshots
+
+| Digital Instrument Cluster | Dual-Window ECU Simulator |
+|:---:|:---:|
+| ![Digital Instrument Cluster Screenshot](https://raw.githubusercontent.com/skrehanahamed/ApexECU_Cluster/main/docs/media/cluster_screenshot_placeholder.png) | ![ECU Simulator Screenshot](https://raw.githubusercontent.com/skrehanahamed/ApexECU_Cluster/main/docs/media/ecu_simulator_screenshot_placeholder.png) |
+
+| Driver Assist (ADAS) 3D Highway View | 21-Card OEM Warning System |
+|:---:|:---:|
+| ![Driver Assist 3D View](https://raw.githubusercontent.com/skrehanahamed/ApexECU_Cluster/main/docs/media/driver_assist_screenshot_placeholder.png) | ![Warning Deck Screenshot](https://raw.githubusercontent.com/skrehanahamed/ApexECU_Cluster/main/docs/media/warning_deck_screenshot_placeholder.png) |
+
+---
+
 ## Key Features
 
 ### 1. Cinematic Bootup & Acoustic Engine
