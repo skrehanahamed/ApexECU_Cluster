@@ -107,7 +107,7 @@ ApexECU_Cluster/
 ### Quick Start (using Makefile)
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/ApexECU_Cluster.git
+git clone https://github.com/skrehanahamed/ApexECU_Cluster.git
 cd ApexECU_Cluster
 
 # Build the project
@@ -126,6 +126,9 @@ cmake --build .
 ```
 
 ---
+
+## 👤 Author
+* **SK Rehan Ahamed** — [@skrehanahamed](https://github.com/skrehanahamed)
 
 ## 📜 License
 Distributed under the MIT License. See `LICENSE` for more information.
