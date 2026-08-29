@@ -62,3 +62,8 @@ ui_*.h
 *.log
 *.tmp
 scratch/
+
+# Large Raw Video Recordings
+video/*.mov
+video/apex_cluster_demo.mp4
+!video/demo.mp4

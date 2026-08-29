@@ -13,10 +13,11 @@ A high-fidelity, luxury **Automotive Digital Instrument Cluster** and interactiv
 ## Preview & Media Showcase
 
 ### Application Demo Video
-<!-- Paste your YouTube / MP4 video link or animated GIF preview below -->
-[![Watch Demo Video](https://raw.githubusercontent.com/skrehanahamed/ApexECU_Cluster/main/docs/media/video_thumbnail_placeholder.png)](https://github.com/skrehanahamed/ApexECU_Cluster)
+https://github.com/user-attachments/assets/demo.mp4
 
-*Demo video placeholder: Replace the link above with your live demo video, screen recording, or animated GIF.*
+<video src="https://github.com/skrehanahamed/ApexECU_Cluster/raw/main/video/demo.mp4" controls="controls" width="100%">
+  <a href="https://github.com/skrehanahamed/ApexECU_Cluster/raw/main/video/demo.mp4">Download / Watch Demo Video (MP4)</a>
+</video>
 
 ### User Interface Screenshots
 
