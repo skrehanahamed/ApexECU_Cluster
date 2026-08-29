@@ -22,11 +22,15 @@ A high-fidelity, luxury **Automotive Digital Instrument Cluster** and interactiv
 
 | Digital Instrument Cluster | Dual-Window ECU Simulator |
 |:---:|:---:|
-| ![Digital Instrument Cluster Screenshot](https://raw.githubusercontent.com/skrehanahamed/ApexECU_Cluster/main/docs/media/cluster_screenshot_placeholder.png) | ![ECU Simulator Screenshot](https://raw.githubusercontent.com/skrehanahamed/ApexECU_Cluster/main/docs/media/ecu_simulator_screenshot_placeholder.png) |
+|<img width="2888" height="1340" alt="image" src="https://github.com/user-attachments/assets/dcce0c7c-6ab5-4de0-836a-6457eeafa08a" />
+ |<img width="1778" height="1502" alt="image" src="https://github.com/user-attachments/assets/c876664f-8a61-4271-b163-61c7874a2c2a" />
+|
 
 | Driver Assist (ADAS) 3D Highway View | 21-Card OEM Warning System |
 |:---:|:---:|
-| ![Driver Assist 3D View](https://raw.githubusercontent.com/skrehanahamed/ApexECU_Cluster/main/docs/media/driver_assist_screenshot_placeholder.png) | ![Warning Deck Screenshot](https://raw.githubusercontent.com/skrehanahamed/ApexECU_Cluster/main/docs/media/warning_deck_screenshot_placeholder.png) |
+|<img width="638" height="494" alt="image" src="https://github.com/user-attachments/assets/c52de7f4-bf2d-482d-9084-630b2226b2c2" />
+|<img width="1742" height="1504" alt="image" src="https://github.com/user-attachments/assets/d80348f8-a05c-4f26-a82c-440ffebcd8a9" />
+|
 
 ---
 
