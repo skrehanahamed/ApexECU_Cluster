@@ -1,110 +1,149 @@
-# APEX SUV — Next-Gen EV Digital Instrument Cluster & ECU Simulator
+# APEX EV Digital Instrument Cluster & ECU Simulation Suite
 
-[![Qt 6.11](https://img.shields.io/badge/Qt-6.11+-41CD52.svg?logo=qt&logoColor=white)](https://www.qt.io/)
-[![C++20](https://img.shields.io/badge/C++-20-00599C.svg?logo=cplusplus&logoColor=white)](https://isocpp.org/)
-[![CMake](https://img.shields.io/badge/CMake-3.20+-064F8C.svg?logo=cmake&logoColor=white)](https://cmake.org/)
-[![Platform](https://img.shields.io/badge/Platform-macOS%20%7C%20Linux%20%7C%20Windows-lightgrey.svg)](https://github.com/)
+[![Qt 6.11+](https://img.shields.io/badge/Qt-6.11%2B-41CD52?style=flat&logo=qt&logoColor=white)](https://www.qt.io/)
+[![C++17](https://img.shields.io/badge/Standard-C%2B%2B17-00599C?style=flat&logo=c%2B%2B&logoColor=white)](https://isocpp.org/)
+[![CMake](https://img.shields.io/badge/Build-CMake-064F8C?style=flat&logo=cmake&logoColor=white)](https://cmake.org/)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-A high-fidelity, luxury **Automotive Digital Instrument Cluster** and interactive **ECU Telemetry Simulator** built with **Qt 6 (QML / Qt Quick)** and **Modern C++**. Features a live perspective 3-lane Highway Driver Assist (ADAS) highway view, authentic high-performance electric vehicle audio soundscape, dynamic multi-environment scenery backgrounds, and a full 21-card OEM automotive warning system.
+An ultra-modern, production-grade automotive digital instrument cluster and interactive ECU hardware-in-the-loop (HIL) simulation suite designed for luxury electric vehicles (EV). Built natively using **Qt 6 / QML** and high-performance **C++17**, featuring real-time 3-lane ADAS road perception, full-screen cinematic EV charging, 21 OEM telltales, comprehensive telemetry gauges, 6-door safety interlocks, and synthesized audio chimes.
+
+> **Latest Update (August 30, 2026)**: Major feature release introducing the dedicated standalone multi-tab ECU Telemetry Emulator window, cinematic full-screen EV fast-charging suite, interactive 6-door chassis access safety interlocks, 4-wheel independent TPMS overlay, and synthesized audio engine.
 
 ---
 
-## Preview & Media Showcase
+## What's New in this Update (Release: August 30, 2026)
 
-### Application Demo Video
+### 1. Dedicated Standalone ECU Telemetry Controller Window
+* **Detached Multi-Window Architecture**: Decoupled the interactive ECU emulator into an independent auxiliary window (`EcuEmulatorPanel.qml`), accessible via `E` or `Tab`.
+* **7-Tab Modular Control Bench**:
+  * **Tab 0 (Dynamics)**: Real-time speed slider (0–260 km/h), power output / regenerative braking demand (-100 kW to +300 kW), PRND transmission gear selector, drive mode selector (Comfort, Sport, Eco, Off-Road), speed limit sign presets (80 / 120 km/h), and manual turn indicator triggers.
+  * **Tab 1 (Doors & Access)**: 6-point interactive chassis access management (Front Left, Front Right, Rear Left, Rear Right, Bonnet, Trunk) with batch Open/Close All controls and drive safety interlocks.
+  * **Tab 2 (Navigation & Terrain)**: Turn-by-turn maneuver triggers (Right, Left, Slight Right, Straight, Roundabout, U-Turn), navigation states (Guiding, Recalculating, Arrived, GPS Lost), street names, ETA countdowns, remaining distance, 16-point compass heading rose, elevation meter, and pitch/roll inclinometer.
+  * **Tab 3 (ADAS & Highway Traffic)**: Lead vehicle distance slider, multi-class obstacle selection (SUV, Sedan, Hatchback, Motorcycle, Bicycle, Pedestrian), adjacent lane pass-by traffic toggle, left/right overtaking controls, and blind-spot proximity warning carpets.
+  * **Tab 4 (Battery & TPMS)**: High-voltage battery SoC percentage, pack thermal temperature (0°C to 120°C), ambient temperature slider, trip computer telemetry (Trip A, Trip B, Odometer), and 4-wheel independent tire pressure PSI controls with ISO threshold alerts.
+  * **Tab 5 (Telltales & Lighting Grid)**: Independent manual toggles for all 21 ISO 7000 indicators including low/high beams, auto high beam assist, fog lamps, 12V auxiliary battery, ABS, ESC, EPB, airbag, check engine, and Neutral gear indicator.
+  * **Tab 6 (Cards & Chaos Simulator)**: 22 OEM critical diagnostic warning cards gallery, 1-click automotive presets (*Highway Cruising, Fast DC Charging, Low Battery Alert, Rainy Night, Extreme Winter Freeze, Aggressive Sport Drive*), and an autonomous Chaos Lifecycle Engine that continuously simulates realistic driving cycles.
 
+### 2. Cinematic Full-Screen EV Fast-Charging Suite
+* **High-Resolution Charging Scenery**: Dedicated full-screen charging display (`ChargingScreen.qml`) featuring a luxury EV connected to an illuminated DC fast charging station.
+* **Live Telemetry & Diagnostics**:
+  * **Power Metrics Card**: Live charging rate (kW), dynamic time-to-target countdown (min), and total energy delivered (kWh).
+  * **OEM Diagnostic Verification Badges**: Real-time status indicators (*Charging Active, Power Connected, Battery Safe, Fault-Free*).
+  * **Battery SoC Glow Indicator**: High-visibility glowing green battery percentage and animated gradient progress bar.
+* **State Machine Integration**: Engages upon vehicle ignition shutdown (`IGN OFF` & Goodbye sequence) when charging is active or toggled via the ECU emulator.
 
-https://github.com/user-attachments/assets/64170b31-a5b3-4ab9-87de-2bc2024274be
+### 3. Interactive 6-Door / Hatch Vehicle Access Safety System
+* **Chassis Top-View Overlay**: Dynamic visual rendering of door, bonnet, and trunk ajar states with red highlighted graphics.
+* **Safety Interlocks & Audio Alarms**: Automated safety interlocks that trigger audible warning chimes when shifting into Drive (`D`) or Reverse (`R`) with any door or hatch open.
 
+### 4. 4-Wheel Independent TPMS Chassis Overlay
+* **Dedicated Full-Chassis View (`TpmsCard.qml`)**: Toggleable via `P` key, displaying real-time pressure readouts for all 4 individual tires.
+* **Threshold Warning Logic**: Visual color-coded alerts based on standard tire pressure ratings (33 PSI baseline; amber warning at <30 PSI or >38 PSI).
+* **Integrated Mini-TPMS**: Compact status readout permanently embedded in the cluster bottom info bar.
 
-
-### User Interface Screenshots
-
-| Digital Instrument Cluster | Dual-Window ECU Simulator |
-|:---:|:---:|
-| <img src="https://github.com/user-attachments/assets/dcce0c7c-6ab5-4de0-836a-6457eeafa08a" width="100%" alt="APEX Digital Instrument Cluster" /> | <img src="https://github.com/user-attachments/assets/c876664f-8a61-4271-b163-61c7874a2c2a" width="100%" alt="ECU Telemetry Simulator" /> |
-
-| Driver Assist (ADAS) 3D Highway View | 21-Card OEM Warning System |
-|:---:|:---:|
-| <img src="https://github.com/user-attachments/assets/c52de7f4-bf2d-482d-9084-630b2226b2c2" width="100%" alt="Driver Assist 3D Highway View" /> | <img src="https://github.com/user-attachments/assets/d80348f8-a05c-4f26-a82c-440ffebcd8a9" width="100%" alt="21-Card OEM Warning System" /> |
+### 5. Synthesized Automotive Audio Engine (C++)
+* **Native Audio Architecture (`ClusterAudio.h`)**: Non-blocking audio playback supporting startup signatures, drive mode shifts, turn indicator tick-tock rhythms, warning alerts, and critical hazard chimes.
 
 ---
 
-## Key Features
+## Keyboard Shortcuts & Quick Controls
 
-### 1. Cinematic Bootup & Acoustic Engine
-* **Pure Acoustic Crystal Chime**: Luxury E-Major 9th crystal chime with sub-bass frequency sweep on vehicle wake-up.
-* **Electric Performance SUV Motor Soundscape**: High-voltage dual-inverter pre-charge, dual-motor stator torque surge (150 Hz to 1,850 Hz), 12-pole magnetic harmonics, and regenerative deceleration to idle power hum.
-* **OEM Gauge Needle Sweeps**: Synchronized startup sweep of Power (0 to 300 kW), Speedometer (0 to 188 km/h), and Battery Temperature (0 to 85°C).
-* **Full Spacebar Reboot**: Pressing `Space` at any time instantly reboots the entire system with zero-state resets.
+| Key | Function | Description |
+| :--- | :--- | :--- |
+| **`Space`** | **Master System Reboot** | Triggers full zero-state reboot and replays the startup sequence, gauge sweeps, and chimes |
+| **`Return` / `Enter` / `C`** | **Skip Startup Transition** | Skips the welcome animation directly into the active driving cluster |
+| **`D`** | **Cycle Drive Mode** | Cycles through drive modes: `COMFORT` -> `SPORT` -> `ECO` -> `OFF-ROAD` |
+| **`O` / `T`** | **Cycle Trip Computer** | Cycles bottom info bar trip modes: `TRIP A` -> `TRIP B` -> `ODO` |
+| **`R`** | **Reset Active Trip** | Resets the currently displayed trip odometer counter (`TRIP A` or `TRIP B`) to `0.0 km` |
+| **`W`** | **Toggle Warning Cards Test** | Cycles through all 22 OEM critical diagnostic warning cards for cluster testing |
+| **`P`** | **Toggle TPMS Chassis Overlay** | Opens / closes the full 4-wheel tire pressure monitoring chassis overlay |
+| **`E` / `Tab`** | **Toggle ECU Emulator Window** | Opens / closes the dedicated standalone interactive ECU hardware simulator window |
+| **`Left Arrow`** | **Left Turn Signal** | Toggles left turn blinker with synchronized tick-tock audio rhythm |
+| **`Right Arrow`** | **Right Turn Signal** | Toggles right turn blinker with synchronized tick-tock audio rhythm |
 
-### 2. 3-Lane Highway Driver Assist (ADAS) System
-* **Perspective 3D Road Rendering**: Real-time curved road canvas with scrolling dashed lane dividers and lateral ego-vehicle sway.
-* **Lead Vehicle Radar & Following Distance**: Real-time target tracking (10m–80m) with HUD distance meter and dynamic obstacle support (Sports Car, Sedan, Hatchback, Motorcycle, Bicycle, Pedestrian).
-* **Multi-Lane Traffic Simulation**: Natural left-lane and right-lane overtaking pass-by vehicles with proximity collision detection.
-* **Driver Assist Master Toggle**: When disabled, all traffic obstacles and distance HUDs are hidden, and collision warnings are suppressed. Top status shows `DRIVER ASSIST OFF`.
-* **Forward Collision Warning**: Triggers persistent visual alert and repeating critical audio alert when lead obstacle is less than 13 meters.
+> **Note**: Vehicle dynamic parameters (speed, power/regen, gear selection, ADAS obstacle distances, battery SoC, tire pressures, and door latches) are controlled in real time via the standalone **ECU Emulator Panel** (`E` / `Tab`).
 
-### 3. Complete 21-Card OEM Automotive Warning System
-* **Official APEX Warning Cards**: 21 cards covering Brake System, ABS, Motor Overtemp, Battery Fault, High Speed, Low Voltage, Tire Pressure, ADAS Lane Departure, and more.
-* **Speed Warning Alerts**:
-  * Above 80 km/h: Single warning chime + 2.5s popup card.
-  * Above 120 km/h: Persistent dangerous speed card + repeating 2-second chime until speed drops to 120 km/h or below.
-* **Ambient Freezing Warning**: White vector snowflake icon automatically illuminates before the temperature readout when ambient temperature drops below 3°C (e.g. `2°C`, `-4°C`).
+---
 
-### 4. Dual-Window ECU Simulator Window
-* **Speed, Power & Battery Controls**: Interactive sliders for vehicle speed (0–240 km/h), power output (-50 kW regen to 300 kW boost), battery charge (0–100%), and ambient temperature (-10°C to 45°C).
-* **Gear Selector**: P (Park), R (Reverse with parking guidelines), N (Neutral), D (Drive).
-* **Drive Modes**: `COMFORT` (Cyan), `SPORT` (Crimson Red), `ECO` (Emerald Green), `OFF-ROAD` (Amber Gold).
-* **Scenery Backgrounds**: Mountain Horizon, Cyberpunk City Night, Coastal Sunset.
+## Core Systems & Feature Overview
+
+### 1. 3-Lane Highway ADAS Road Perception
+* **Perspective Road Canvas**: Hardware-accelerated 3D asphalt road with dynamic lane guidance carpet and speed-responsive dashed lines.
+* **Multi-Class Vehicle Traffic**: Real-time traffic simulation with distinct obstacle models (*Lead SUV, Sedan, Hatchback, Motorcycle, Bicycle, Pedestrian*).
+* **Proximity & Blind Spot Detection**: Real-time distance mapping with amber proximity warnings and glowing red road proximity lines when vehicles overtake in adjacent lanes.
+* **Turn-by-Turn Navigation Overlay**: Embedded direction arrows, distance countdown, street names, ETA, and automatic GPS Lost / Recalculation fallback alerts.
+* **Kinematic Reverse Simulation (`R`)**: Dynamic rear radar guidance lines with inverted road line kinematics.
+
+### 2. 21 OEM Automotive Telltale Bar
+* Turn Signals (Left / Right with synchronized audio tick-tock)
+* Seatbelt Warning & Airbag System
+* Electronic Stability / Traction Control (ESC)
+* Electric Park Brake (EPB)
+* Anti-lock Braking System (ABS)
+* Malfunction Indicator Lamp (Check Engine)
+* 12V Auxiliary Battery Warning
+* Tire Pressure Monitoring System (TPMS)
+* EV Charging Connector Plug Indicator
+* OEM Neutral (`N`) Gear Indicator
+* Auto High Beam Assist (A)
+* Low Beam & High Beam Headlamps
+* Front Fog Lamps
+* High-Voltage Battery Thermal Warning
+* Master Warning Indicator
+* Door / Bonnet / Tailgate Ajar Warning
+* Ambient Freeze Warning (Automatic Snowflake icon at <= 3°C)
+* **Bulb-Check Self-Test**: Automated lamp verification cycle on cluster initialization.
+
+### 3. Dual Digital Precision Gauges
+* **Power Delivery & Regen Gauge (-100 kW to +300 kW)**: Dynamic radial arc displaying real-time kW output and green energy regeneration during deceleration.
+* **High-Voltage Battery Temperature Gauge (0°C to 120°C)**: Multi-zone thermal monitoring with automatic warning alerts on overheating (>60°C).
+* **Central Speedometer**: Digital speed readout with units, speed limit badges (80 km/h and 120 km/h warnings), and cruise control telemetry.
+
+### 4. Interactive ECU Hardware-in-the-Loop Simulation
+* **Full Multi-Subsystem Control**: Real-time manipulation of all vehicular inputs via dedicated sliders and toggles.
+* **Automated Chaos Mode**: Built-in algorithmic state generator that simulates realistic urban driving, highway cruising, traffic braking, and thermal cycles automatically.
 
 ---
 
 ## System Architecture
 
 ```mermaid
-flowchart TB
-    subgraph CoreEngine["C++ Core Engine & Platform Layer"]
-        MainCPP["main.cpp<br/>(QGuiApplication & QQmlApplicationEngine)"]
-        AudioEngine["ClusterAudio.h<br/>(Asynchronous Audio Engine)"]
+flowchart TD
+    subgraph Host["C++ Runtime Layer"]
+        MainCPP["main.cpp<br/>Application Entry & QML Engine"]
+        AudioEngine["ClusterAudio.h<br/>Synthesized Audio Engine"]
     end
 
-    subgraph ECUController["ECU Telemetry & Simulator Window"]
-        EcuPanel["EcuEmulatorPanel.qml<br/>• Speed & Power Telemetry<br/>• Gear & Drive Mode Select<br/>• Driver Assist (ADAS) Controls<br/>• 21-Card Warning Injector<br/>• Ambient Temperature Slider"]
+    subgraph ECUController["Standalone ECU Controller Window"]
+        EcuPanel["EcuEmulatorPanel.qml<br/>- Tab 0: Dynamics & Gear<br/>- Tab 1: Doors & Access<br/>- Tab 2: Navigation & Terrain<br/>- Tab 3: ADAS & Traffic<br/>- Tab 4: Battery & TPMS<br/>- Tab 5: ISO Telltales<br/>- Tab 6: Cards & Chaos Engine"]
     end
 
-    subgraph MasterQML["Main Cluster Presentation Layer (Main.qml)"]
-        Welcome["WelcomeScreen.qml<br/>• Vehicle Silhouette<br/>• APEX Wordmark Illuminator<br/>• Startup Chime Trigger"]
-        ClusterView["DrivingCluster.qml<br/>(Master State Machine)"]
+    subgraph MasterQML["Main Cluster Window (Main.qml)"]
+        Welcome["WelcomeScreen.qml<br/>Startup Animation & Boot Chime"]
+        ClusterView["DrivingCluster.qml<br/>Master State Machine & Arbitrator"]
+        ChargingView["ChargingScreen.qml<br/>Cinematic DC Fast Charging View"]
     end
 
-    subgraph ClusterComponents["Digital Cluster Components"]
-        TopBar["TopStatusBar.qml<br/>• Clock & Drive Mode<br/>• Driver Assist (ON/OFF)<br/>• Ambient Temp & Freeze Icon"]
-        CenterSpeed["CentralSpeed.qml<br/>• Dead-Centered Speed<br/>• Side Speed Limit Sign<br/>• APEX Emblem"]
-        Road3D["AdasRoadView.qml<br/>• Perspective 3D Road<br/>• Radar Target Tracking<br/>• Pass-By Traffic Sim<br/>• Collision Distance Meter"]
-        PowerGauge["PowerGauge.qml<br/>• 0-300 kW Power<br/>• Regenerative Arc"]
-        TempGauge["BatteryTempGauge.qml<br/>• Pack Thermal Health<br/>• Trip Computer"]
-        Telltales["TelltaleBar.qml<br/>• 21 ISO Telltales<br/>• Bulb-Check Self-Test"]
-        BottomBar["BottomInfoBar.qml<br/>• Battery SOC & Range<br/>• Gear PRND Selector<br/>• Horizon Line Divider"]
+    subgraph ClusterComponents["Instrument Cluster Components"]
+        TopBar["TopStatusBar.qml<br/>Clock, Drive Mode, Temp, GPS & LTE"]
+        CenterSpeed["CentralSpeed.qml<br/>Speedometer & Speed Limit Badge"]
+        Road3D["AdasRoadView.qml<br/>3-Lane ADAS Highway & Reverse Kinematics"]
+        PowerGauge["PowerGauge.qml<br/>0-300 kW Power & Regen Arc"]
+        TempGauge["BatteryTempGauge.qml<br/>HV Pack Thermal Monitoring"]
+        Telltales["TelltaleBar.qml<br/>21 ISO Telltales & Bulb Check"]
+        BottomBar["BottomInfoBar.qml<br/>Battery SoC, Range, Gear & Compass"]
+        TpmsOverlay["TpmsCard.qml<br/>4-Wheel PSI Chassis Overlay"]
     end
 
-    subgraph AssetDeck["Asset & Media Deck"]
-        AudioWav["assets/audio/<br/>• Crystal Chime<br/>• Electric SUV Rev<br/>• Critical / Warning Beeps"]
-        WarningCards["assets/warnings/<br/>• 21 APEX Alert Cards"]
-        VectorSVG["assets/telltales/<br/>• 34 ISO SVG Telltales<br/>• Freeze Snowflake Icon"]
-        Vehicles["assets/vehicles/<br/>• SUV Model & Traffic"]
-        Wallpapers["assets/wallpapers/<br/>• 3 Scenic Environments"]
-    end
+    MainCPP -->|Registers Context Property| AudioEngine
+    MainCPP -->|Initializes QML Engine| MasterQML
+    MasterQML -->|Spawns Floating Window| ECUController
 
-    MainCPP -->|Injects Context Property| AudioEngine
-    MainCPP -->|Loads QML Trees| MasterQML
-    MainCPP -->|Spawns Secondary Window| ECUController
+    EcuPanel <-->|Bi-directional Telemetry Property Binding| ClusterView
 
-    EcuPanel <-->|Bi-directional Telemetry Binding| ClusterView
-
-    MasterQML -->|Coordinates State| Welcome
-    MasterQML -->|Bootup Transition| ClusterView
+    MasterQML -->|Boot Lifecycle| Welcome
+    MasterQML -->|Transitions To| ClusterView
+    ClusterView -->|IGN OFF & Charging Active| ChargingView
 
     ClusterView --> TopBar
     ClusterView --> CenterSpeed
@@ -113,17 +152,12 @@ flowchart TB
     ClusterView --> TempGauge
     ClusterView --> Telltales
     ClusterView --> BottomBar
-
-    AudioEngine -.-> AudioWav
-    ClusterView -.-> WarningCards
-    Telltales -.-> VectorSVG
-    Road3D -.-> Vehicles
-    ClusterView -.-> Wallpapers
+    ClusterView --> TpmsOverlay
 ```
 
 ---
 
-## Bootup & Spacebar Reboot Lifecycle
+## Bootup & Lifecycle Sequence
 
 ```mermaid
 sequenceDiagram
@@ -134,40 +168,26 @@ sequenceDiagram
     participant Welcome as WelcomeScreen
     participant Cluster as DrivingCluster
     participant Gauges as Gauges & Telltales
-    participant ADAS as Driver Assist (ADAS)
+    participant ADAS as ADAS Highway View
 
-    Driver->>Main: Press [Space] or Launch App
-    Main->>Main: Full Zero-State Reset
-    Main->>Audio: playStartupChime() (Crystal Bell Signature)
-    Main->>Welcome: restartSequence() (Vehicle Silhouette -> APEX Wordmark -> Ready)
+    Driver->>Main: Press [Space] or Launch Application
+    Main->>Main: Full Zero-State Initialization
+    Main->>Audio: playStartupChime() (Signature Bell Tone)
+    Main->>Welcome: restartSequence() (Vehicle Silhouette -> APEX Wordmark)
     
-    Note over Main,Welcome: 3.5s Welcome Duration (or instant skip on Enter/Click)
+    Note over Main,Welcome: 3.5s Welcome sequence (or skip via Enter / Return / C)
 
-    Main->>Cluster: clusterTransitionAnim (Fade in Cluster UI)
-    Main->>Audio: playEngineRev() (Electric Performance SUV Surge)
-    Cluster->>Gauges: startupSelfTestAnim (Power 300kW, Speed 188km/h, Temp 85°C Sweep)
-    Cluster->>Gauges: Bulb Check (All 21 Telltales ON)
+    Main->>Cluster: Transition Animation (Fade in Cluster UI)
+    Main->>Audio: playEngineRev() (Electric Drive Pulse)
+    Cluster->>Gauges: Gauge Sweep Self-Test (Power, Speed, Temperature)
+    Cluster->>Gauges: Bulb Check (All 21 Telltales Light Up)
     
-    Note over Gauges: Gauges peak-hold and smoothly sweep back to 0
+    Note over Gauges: Gauges peak and return smoothly to live telemetry
     
-    Cluster->>Gauges: Bulb Check Complete (Telltales OFF, Park Brake ON)
-    Cluster->>ADAS: Road View & Multi-Environment Scenery gracefully fade in (opacity -> 1.0)
-    Cluster->>Cluster: Speed Limit Badge (80) pops into view on side
-    Note over ADAS,Cluster: System Ready & Driver Assist Active
+    Cluster->>Gauges: Bulb Check Complete (Standard indicators active, Park Brake ON)
+    Cluster->>ADAS: Road View & Scenery fade into view
+    Cluster->>Cluster: System Status Ready
 ```
-
----
-
-## Keyboard Shortcuts
-
-| Key | Action |
-|:---|:---|
-| <kbd>Space</kbd> | **Full System Reboot** (Replays Welcome sequence, chimes & sweeps) |
-| <kbd>Return</kbd> / <kbd>Enter</kbd> / <kbd>C</kbd> | **Fast-forward** from Welcome Screen directly to Cluster |
-| <kbd>D</kbd> | Cycle **Drive Mode** (COMFORT -> SPORT -> ECO -> OFF-ROAD) |
-| <kbd>E</kbd> / <kbd>Tab</kbd> | Open / Close **ECU Emulator Panel** |
-| <kbd>T</kbd> | Cycle Bulb Check / All Telltale Warning Lights |
-| <kbd>Left</kbd> / <kbd>Right</kbd> | Toggle **Left / Right Turn Signal** |
 
 ---
 
@@ -175,73 +195,85 @@ sequenceDiagram
 
 ```
 ApexECU_Cluster/
-├── CMakeLists.txt              # CMake build configuration with Qt 6 integration
-├── Makefile                    # Portable developer convenience commands
-├── .gitignore                  # Production Git ignore rules
+├── CMakeLists.txt              # CMake build configuration with Qt 6 QML module setup
+├── Makefile                    # Developer shortcuts (make run, make build, make clean)
 ├── README.md                   # Project documentation
 │
 ├── src/                        # C++ Backend
-│   ├── main.cpp                # Application entrypoint & QML engine setup
-│   └── ClusterAudio.h          # Non-blocking audio playback engine
+│   ├── main.cpp                # Application entrypoint & QML engine initialization
+│   └── ClusterAudio.h          # Synthesized automotive sound generator
 │
-├── qml/                        # QML / Qt Quick Frontend
-│   ├── Main.qml                # Master root container & boot transitions
-│   ├── bars/                   # Status & Telltale Bars
-│   │   ├── TopStatusBar.qml    # Time, Drive Mode, Driver Assist status & Freeze temp
-│   │   ├── BottomInfoBar.qml   # Battery, Range, Gear & Trip telemetry
-│   │   └── TelltaleBar.qml     # 21 ISO standard automotive telltales
-│   ├── center/                 # Central Gauge Readouts
-│   │   ├── CentralSpeed.qml    # Dead-centered speed & side-floating speed limit sign
-│   │   └── EcuEmulatorPanel.qml# Dual-window real-time ECU Telemetry Controller
-│   ├── gauges/                 # Circular & Arc Gauges
-│   │   ├── PowerGauge.qml      # 0-300 kW power / regenerative braking arc
-│   │   └── BatteryTempGauge.qml# Battery pack thermal health gauge
-│   └── views/                  # Master Viewports
-│       ├── WelcomeScreen.qml   # Luxury vehicle silhouette & emblem wake-up
-│       ├── DrivingCluster.qml  # Main driving cluster UI & self-test coordinator
-│       ├── AdasRoadView.qml    # 3-Lane perspective Driver Assist highway engine
-│       └── StarfieldSky.qml    # Ambient celestial background layer
+├── qml/                        # Qt Quick / QML User Interface
+│   ├── Main.qml                # Master root window & keyboard routing
+│   │
+│   ├── views/                  # Primary Cluster Viewports
+│   │   ├── DrivingCluster.qml  # Main driving cluster screen & state machine
+│   │   ├── ChargingScreen.qml  # Cinematic full-screen EV fast-charging view
+│   │   ├── AdasRoadView.qml    # 3-Lane perspective highway ADAS road canvas
+│   │   ├── WelcomeScreen.qml   # Startup welcome animation sequence
+│   │   └── StarfieldSky.qml    # Animated starry sky background layer
+│   │
+│   ├── bars/                   # Standardized Status & Indicator Bars
+│   │   ├── TopStatusBar.qml    # Clock, Drive Mode, Temp, GPS & Network telemetry
+│   │   ├── TelltaleBar.qml     # 21 OEM automotive telltale indicators
+│   │   └── BottomInfoBar.qml   # Battery SoC, Range, Gear selector, Mini-TPMS
+│   │
+│   ├── gauges/                 # Precision Analog & Digital Instrumentation
+│   │   ├── PowerGauge.qml      # Radial Power (kW) & Regen gauge
+│   │   └── BatteryTempGauge.qml# Radial Battery Temperature gauge
+│   │
+│   └── center/                 # Center Stage & Emulation Components
+│       ├── CentralSpeed.qml    # Digital speedometer & speed limit sign
+│       ├── TpmsCard.qml        # Detailed 4-wheel chassis tire pressure overlay
+│       └── EcuEmulatorPanel.qml# Standalone multi-tab ECU simulation control bench
 │
-└── assets/                     # Organized Asset Tree
-    ├── audio/                  # Startup chimes, electric motor sounds & alerts
+└── assets/                     # Packaged Binary & Vector Assets
+    ├── audio/                  # Startup chimes, motor sounds, and alert tones
     ├── branding/               # APEX wordmarks and vehicle emblems
-    ├── modes/                  # Drive mode character cards
-    ├── telltales/              # 34 ISO telltale SVGs & freeze warning icon
-    ├── vehicles/               # APEX SUV top-down models & traffic obstructions
-    ├── wallpapers/             # High-resolution scenic environment backgrounds
-    └── warnings/               # 21 APEX warning banner cards
+    ├── fonts/                  # Inter variable typography
+    ├── modes/                  # Drive mode graphic cards (Comfort, Sport, Eco, Off-Road)
+    ├── navigation/             # Turn-by-turn guidance SVGs
+    ├── telltales/              # 21+ ISO vector SVGs (active/inactive states)
+    ├── vehicles/               # SUV top-views, chassis diagrams, traffic vehicle models
+    ├── wallpapers/             # Scenic environment backgrounds & charging backdrop
+    └── warnings/               # 22 OEM safety warning alert popup cards
 ```
 
 ---
 
-## Build & Run Instructions
+## Getting Started
 
 ### Prerequisites
-* **Qt 6.5+** (tested on Qt 6.11) with `QtQuick`, `QtQuick.Controls`
+* **macOS / Linux / Windows**
+* **Qt 6.5+** (tested on Qt 6.11) with `QtQuick`, `QtQuick.Controls`, `QtGui`, `QtCore`
 * **CMake 3.20+**
-* **C++20** compatible compiler (Clang / GCC / MSVC)
-* **Ninja** build system (recommended)
+* **Clang** or **GCC** supporting C++17
 
-### Quick Start (using Makefile)
-```bash
-# Clone the repository
-git clone https://github.com/skrehanahamed/ApexECU_Cluster.git
-cd ApexECU_Cluster
+### Build & Run
 
-# Build the project
-make build
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/skrehanahamed/ApexECU_Cluster.git
+   cd ApexECU_Cluster
+   ```
 
-# Launch the Application (Opens Cluster + ECU Emulator)
-make run
-```
+2. **Run using Makefile** (Recommended):
+   ```bash
+   # Build the executable
+   make build
 
-### Manual CMake Build
-```bash
-mkdir build && cd build
-cmake .. -DCMAKE_PREFIX_PATH=/path/to/Qt/6.x.x/macos -GNinja
-cmake --build .
-./ApexCluster
-```
+   # Launch the cluster and ECU emulator
+   make run
+   ```
+
+3. **Or build with CMake manually**:
+   ```bash
+   mkdir build && cd build
+   cmake ..
+   cmake --build .
+   ./ApexCluster.app/Contents/MacOS/ApexCluster   # macOS
+   # or ./ApexCluster                             # Linux/Windows
+   ```
 
 ---
 
@@ -250,15 +282,10 @@ cmake --build .
 * **SK Rehan Ahamed** — [@skrehanahamed](https://github.com/skrehanahamed)
 
 ### AI Collaborators & Engineering Credits
-Created by **SK Rehan Ahamed** in creative collaboration with **Antigravity**, **Gemini**, and **ChatGPT**.
+Created by **SK Rehan Ahamed** in collaboration with **Antigravity**, **Gemini**, and **ChatGPT**.
 
 ---
 
 ## License
-Distributed under the MIT License. See `LICENSE` for more information.
 
-<br/>
-
-<p align="center">
-  <sub>Crafted with modern C++ and Qt 6 Quick for automotive digital instrument cluster systems.</sub>
-</p>
+This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.

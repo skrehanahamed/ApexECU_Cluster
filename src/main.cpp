@@ -3,6 +3,7 @@
 #include <QQmlContext>
 #include <QQuickWindow>
 #include <QSurfaceFormat>
+#include <QFontDatabase>
 #include "ClusterAudio.h"
 
 int main(int argc, char *argv[])
@@ -10,6 +11,15 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
     app.setApplicationName("APEX SUV - Quiet Luxury Cluster");
     app.setOrganizationName("ApexAutomotive");
+
+    // Register Inter Font from assets
+    int fontId = QFontDatabase::addApplicationFont(QStringLiteral(":/qt/qml/ApexCluster/assets/fonts/Inter-VariableFont.ttf"));
+    if (fontId != -1) {
+        QStringList families = QFontDatabase::applicationFontFamilies(fontId);
+        if (!families.isEmpty()) {
+            app.setFont(QFont(families.first()));
+        }
+    }
 
     QSurfaceFormat format;
     format.setSamples(4);

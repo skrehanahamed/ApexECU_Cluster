@@ -29,19 +29,23 @@ qt_add_qml_module(ApexCluster
         qml/Main.qml
         qml/views/WelcomeScreen.qml
         qml/views/DrivingCluster.qml
+        qml/views/ChargingScreen.qml
         qml/views/AdasRoadView.qml
         qml/views/StarfieldSky.qml
         qml/gauges/PowerGauge.qml
         qml/gauges/BatteryTempGauge.qml
         qml/center/CentralSpeed.qml
+        qml/center/TpmsCard.qml
         qml/center/EcuEmulatorPanel.qml
         qml/bars/TelltaleBar.qml
         qml/bars/TopStatusBar.qml
         qml/bars/BottomInfoBar.qml
     RESOURCES
+        assets/fonts/Inter-VariableFont.ttf
         assets/wallpapers/cluster_mountain_horizon.jpg
         assets/wallpapers/cluster_city_night.jpg
         assets/wallpapers/cluster_coastal_sunset.jpg
+        assets/wallpapers/cluster_charging_backdrop.png
         assets/modes/mode_card_eco.png
         assets/modes/mode_card_comfort.png
         assets/modes/mode_card_sport.png
@@ -67,14 +71,34 @@ qt_add_qml_module(ApexCluster
         assets/warnings/warning_steering_assist.png
         assets/warnings/warning_speed_80.png
         assets/warnings/warning_speed_120.png
-        assets/vehicles/car_silhouette.png
+        assets/warnings/warning_accessory_mode.png
+        assets/vehicles/tpms_chassis_topview.png
+        assets/vehicles/charging_suv_station.jpg
         assets/vehicles/apex_suv_adas_model.png
+        assets/vehicles/bonnet_open_red.png
+        assets/vehicles/trunk_open_red.png
+        assets/vehicles/door_front_left.png
+        assets/vehicles/door_front_right.png
+        assets/vehicles/door_rear_left.png
+        assets/vehicles/door_rear_right.png
+        assets/vehicles/doors_left_open.png
+        assets/vehicles/doors_right_open.png
+        assets/vehicles/car_silhouette.png
         assets/vehicles/obstruction_car_lead.png
         assets/vehicles/obstruction_sedan.png
         assets/vehicles/obstruction_hatchback.png
         assets/vehicles/obstruction_pedestrian.png
         assets/vehicles/obstruction_bicycle.png
         assets/vehicles/obstruction_motorcycle.png
+        assets/navigation/recalculation.svg
+        assets/navigation/destination_reached.svg
+        assets/navigation/gps_lost.svg
+        assets/navigation/turn_right.svg
+        assets/navigation/turn_left.svg
+        assets/navigation/turn_fork.svg
+        assets/navigation/straight.svg
+        assets/navigation/roundabout.svg
+        assets/navigation/u_turn.svg
         assets/branding/apex_wordmark.png
         assets/branding/apex_logo_tight.png
         assets/telltales/seatbelt_active.svg
@@ -95,6 +119,7 @@ qt_add_qml_module(ApexCluster
         assets/telltales/tpms_inactive.svg
         assets/telltales/ev_plug_active.svg
         assets/telltales/ev_plug_inactive.svg
+        assets/telltales/ev_charge_modern.svg
         assets/telltales/auto_high_beam_active.svg
         assets/telltales/auto_high_beam_inactive.svg
         assets/telltales/low_beam_active.svg
@@ -110,6 +135,13 @@ qt_add_qml_module(ApexCluster
         assets/telltales/door_open_active.svg
         assets/telltales/door_open_inactive.svg
         assets/telltales/freeze_warning.svg
+        assets/telltales/charge_power_bolt.svg
+        assets/telltales/status_charging_active.svg
+        assets/telltales/status_power_connected.svg
+        assets/telltales/status_battery_safe.svg
+        assets/telltales/status_fault_free.svg
+        assets/telltales/neutral_active.svg
+        assets/telltales/neutral_inactive.svg
 )
 
 target_link_libraries(ApexCluster

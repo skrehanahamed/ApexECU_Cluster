@@ -33,7 +33,6 @@ Item {
         source: "../../assets/vehicles/car_silhouette.png"
         fillMode: Image.PreserveAspectCrop
         smooth: true
-        mipmap: true
         opacity: 0.0
     }
 
@@ -55,7 +54,6 @@ Item {
             source: "../../assets/branding/apex_wordmark.png"
             fillMode: Image.PreserveAspectFit
             smooth: true
-            mipmap: true
         }
     }
 

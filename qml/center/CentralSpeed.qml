@@ -61,8 +61,8 @@ Item {
                         anchors.centerIn: parent
                         text: centralSpeed.speedLimit.toString()
                         font.pixelSize: 16
-                        font.weight: Font.Bold
-                        font.family: "sans-serif"
+                        font.weight: Font.DemiBold
+                        font.family: "Inter"
                         color: "#000000"
                         renderType: Text.NativeRendering
                     }
@@ -72,9 +72,9 @@ Item {
                     anchors.horizontalCenter: parent.horizontalCenter
                     text: "LIMIT"
                     font.pixelSize: 8
-                    font.weight: Font.Bold
+                    font.weight: Font.Medium
                     font.letterSpacing: 0.5
-                    font.family: "sans-serif"
+                    font.family: "Inter"
                     color: "#94A3B8"
                     renderType: Text.NativeRendering
                 }
@@ -88,7 +88,7 @@ Item {
                 font.pixelSize: 105
                 font.weight: Font.Normal
                 font.letterSpacing: -1.0
-                font.family: "Menlo, Monaco, monospace"
+                font.family: "Inter"
                 color: "#FFFFFF"
                 renderType: Text.NativeRendering
             }
@@ -99,9 +99,9 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
             text: "km/h"
             font.pixelSize: 16
-            font.weight: Font.Normal
+            font.weight: Font.Medium
             font.letterSpacing: 1.5
-            font.family: "sans-serif"
+            font.family: "Inter"
             color: "#94A3B8"
             renderType: Text.NativeRendering
         }

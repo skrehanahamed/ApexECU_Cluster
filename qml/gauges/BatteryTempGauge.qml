@@ -25,6 +25,94 @@ Item {
     property real consumption: 18.2
     property string themeColor: "#00e5ff"
 
+    // Trip & Odometer Telemetry
+    property string tripMode: "TRIP A"    // "TRIP A", "TRIP B", or "ODO"
+    property real tripAKm: 256.8
+    property real tripBKm: 104.2
+    property real odoKm: 12458.0
+
+    signal cycleTripRequested()
+    signal resetTripRequested()
+
+    property string currentDisplayMode: tripMode
+    property real holdProgress: 0.0
+    property bool isHoldingReset: false
+
+    function formattedDistance(mode) {
+        if (mode === "TRIP A") {
+            var valA = Math.min(9999.0, batteryTempGauge.tripAKm);
+            return valA.toFixed(1) + " km";
+        } else if (mode === "TRIP B") {
+            var valB = Math.min(9999.0, batteryTempGauge.tripBKm);
+            return valB.toFixed(1) + " km";
+        } else {
+            var valOdo = Math.min(999999, Math.round(batteryTempGauge.odoKm));
+            return valOdo.toLocaleString() + " km";
+        }
+    }
+
+    onTripModeChanged: {
+        if (tripMode !== currentDisplayMode) {
+            rollAnimation.restart();
+        }
+    }
+
+    SequentialAnimation {
+        id: rollAnimation
+        // 1. Roll upwards out (tilts backward & moves up)
+        ParallelAnimation {
+            NumberAnimation { target: transY; property: "y"; to: -16; duration: 140; easing.type: Easing.InQuad }
+            NumberAnimation { target: rot3D; property: "angle"; to: -70; duration: 140; easing.type: Easing.InQuad }
+            NumberAnimation { target: rollItem; property: "opacity"; to: 0.0; duration: 120; easing.type: Easing.InQuad }
+        }
+        // 2. Swap text in hidden state and position at bottom
+        ScriptAction {
+            script: {
+                batteryTempGauge.currentDisplayMode = batteryTempGauge.tripMode;
+                transY.y = 16;
+                rot3D.angle = 70;
+            }
+        }
+        // 3. Roll upwards in from bottom to center
+        ParallelAnimation {
+            NumberAnimation { target: transY; property: "y"; to: 0; duration: 200; easing.type: Easing.OutBack; easing.overshoot: 1.15 }
+            NumberAnimation { target: rot3D; property: "angle"; to: 0; duration: 200; easing.type: Easing.OutBack; easing.overshoot: 1.15 }
+            NumberAnimation { target: rollItem; property: "opacity"; to: 1.0; duration: 160; easing.type: Easing.OutCubic }
+        }
+    }
+
+    SequentialAnimation {
+        id: resetFlashAnim
+        ParallelAnimation {
+            NumberAnimation { target: rollItem; property: "scale"; from: 1.0; to: 1.18; duration: 120; easing.type: Easing.OutQuad }
+            ColorAnimation { target: tripKmLabel; property: "color"; to: batteryTempGauge.themeColor; duration: 120 }
+        }
+        ParallelAnimation {
+            NumberAnimation { target: rollItem; property: "scale"; to: 1.0; duration: 180; easing.type: Easing.OutBounce }
+            ColorAnimation { target: tripKmLabel; property: "color"; to: "#CBD5E1"; duration: 250 }
+        }
+    }
+
+    Timer {
+        id: holdResetTimer
+        interval: 30
+        repeat: true
+        running: batteryTempGauge.isHoldingReset
+        onTriggered: {
+            if (batteryTempGauge.holdProgress < 1.0) {
+                batteryTempGauge.holdProgress += 0.04; // ~750ms to trigger reset
+                if (batteryTempGauge.holdProgress >= 1.0) {
+                    batteryTempGauge.holdProgress = 1.0;
+                    holdResetTimer.stop();
+                    if (batteryTempGauge.tripMode !== "ODO") {
+                        batteryTempGauge.resetTripRequested();
+                        resetFlashAnim.restart();
+                    }
+                }
+            }
+        }
+    }
+
     Canvas {
         id: gaugeCanvas
         anchors.fill: parent
@@ -97,11 +185,13 @@ Item {
                 ctx.arc(centerX, centerY, radius, activeEndAngle, angle0, false);
                 ctx.stroke();
 
-                ctx.strokeStyle = "rgba(255, 255, 255, 0.7)";
-                ctx.lineWidth   = 1.2;
-                ctx.beginPath();
-                ctx.arc(centerX, centerY, radius, activeEndAngle + 0.02, angle0 - 0.02, false);
-                ctx.stroke();
+                if (angle0 - activeEndAngle > 0.06) {
+                    ctx.strokeStyle = "rgba(255, 255, 255, 0.7)";
+                    ctx.lineWidth   = 1.2;
+                    ctx.beginPath();
+                    ctx.arc(centerX, centerY, radius, activeEndAngle + 0.02, angle0 - 0.02, false);
+                    ctx.stroke();
+                }
             }
 
             // 4. Tip Indicator Dot
@@ -131,7 +221,7 @@ Item {
                 { val: "0°",  frac: 0.00 }
             ];
 
-            ctx.font = "11px sans-serif";
+            ctx.font = "11px Arial";
             ctx.textAlign = "right";
             ctx.textBaseline = "middle";
 
@@ -195,7 +285,7 @@ Item {
 
             ctx.restore();
 
-            ctx.font = "bold 10px sans-serif";
+            ctx.font = "bold 10px Arial";
             ctx.textAlign = "right";
             ctx.textBaseline = "middle";
             ctx.fillStyle = "#64748B";
@@ -204,7 +294,7 @@ Item {
     }
 
     // ═══════════════════════════════════════════════════════════════
-    // CENTER VALUE DISPLAY: BATTERY TEMP (32 °C) + TRIP STATS
+    // CENTER VALUE DISPLAY: BATTERY TEMP (32 °C) + TRIP COMPUTER
     // ═══════════════════════════════════════════════════════════════
     Column {
         anchors.left: parent.left
@@ -217,10 +307,10 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
             text: "BATTERY TEMP"
             font.pixelSize: 12
-            font.weight: Font.Medium
+            font.weight: Font.DemiBold
             font.letterSpacing: 3.0
             font.capitalization: Font.AllUppercase
-            font.family: "sans-serif"
+            font.family: "Inter"
             color: "#94A3B8"
             renderType: Text.NativeRendering
         }
@@ -236,7 +326,7 @@ Item {
                 font.pixelSize: 54
                 font.weight: Font.Normal
                 font.letterSpacing: 1.0
-                font.family: "Menlo, Monaco, monospace"
+                font.family: "Inter"
                 color: "#FFFFFF"
                 renderType: Text.NativeRendering
             }
@@ -246,8 +336,8 @@ Item {
                 anchors.topMargin: 6
                 text: "°C"
                 font.pixelSize: 18
-                font.weight: Font.Normal
-                font.family: "sans-serif"
+                font.weight: Font.Medium
+                font.family: "Inter"
                 color: "#94A3B8"
                 renderType: Text.NativeRendering
             }
@@ -258,9 +348,9 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
             text: "OPTIMAL  ·  20°–45°C"
             font.pixelSize: 10
-            font.weight: Font.Normal
+            font.weight: Font.Medium
             font.letterSpacing: 1.2
-            font.family: "sans-serif"
+            font.family: "Inter"
             color: "#64748B"
             renderType: Text.NativeRendering
         }
@@ -275,30 +365,94 @@ Item {
             anchors.bottomMargin: 2
         }
 
-        // Trip section
-        Row {
+        // ═══════════════════════════════════════════════════════════
+        // TRIP / ODO SECTION: PURE ORIGINAL DESIGN WITH UPWARD ROLL ANIMATION
+        // ═══════════════════════════════════════════════════════════
+        Item {
+            id: tripContainer
             anchors.horizontalCenter: parent.horizontalCenter
-            spacing: 6
+            width: 160
+            height: 24
+            clip: true
 
-            Text {
-                text: "TRIP A"
-                font.pixelSize: 10
-                font.weight: Font.Medium
-                font.letterSpacing: 1.5
-                font.family: "sans-serif"
-                color: "#94A3B8"
-                anchors.verticalCenter: parent.verticalCenter
-                renderType: Text.NativeRendering
+            Item {
+                id: rollItem
+                anchors.fill: parent
+
+                transform: [
+                    Rotation {
+                        id: rot3D
+                        origin.x: rollItem.width / 2
+                        origin.y: rollItem.height / 2
+                        axis { x: 1; y: 0; z: 0 }
+                        angle: 0
+                    },
+                    Translate {
+                        id: transY
+                        y: 0
+                    }
+                ]
+
+                Row {
+                    anchors.centerIn: parent
+                    spacing: 6
+
+                    Text {
+                        id: tripModeLabel
+                        text: batteryTempGauge.currentDisplayMode
+                        font.pixelSize: 10
+                        font.weight: Font.DemiBold
+                        font.letterSpacing: 1.5
+                        font.family: "Inter"
+                        color: tripMouseArea.containsMouse ? batteryTempGauge.themeColor : "#94A3B8"
+                        anchors.verticalCenter: parent.verticalCenter
+                        renderType: Text.NativeRendering
+
+                        Behavior on color { ColorAnimation { duration: 150 } }
+                    }
+
+                    Text {
+                        id: tripKmLabel
+                        text: batteryTempGauge.formattedDistance(batteryTempGauge.currentDisplayMode)
+                        font.pixelSize: 13
+                        font.weight: Font.Normal
+                        font.family: "Inter"
+                        color: tripMouseArea.containsMouse ? "#FFFFFF" : "#CBD5E1"
+                        anchors.verticalCenter: parent.verticalCenter
+                        renderType: Text.NativeRendering
+
+                        Behavior on color { ColorAnimation { duration: 150 } }
+                    }
+                }
             }
 
-            Text {
-                text: batteryTempGauge.tripKm.toFixed(1) + " km"
-                font.pixelSize: 13
-                font.weight: Font.Normal
-                font.family: "Menlo, Monaco, monospace"
-                color: "#CBD5E1"
-                anchors.verticalCenter: parent.verticalCenter
-                renderType: Text.NativeRendering
+            // Interactive Click & Hold-to-Reset Area
+            MouseArea {
+                id: tripMouseArea
+                anchors.fill: parent
+                hoverEnabled: true
+                cursorShape: Qt.PointingHandCursor
+
+                onPressed: {
+                    batteryTempGauge.holdProgress = 0.0;
+                    batteryTempGauge.isHoldingReset = true;
+                }
+
+                onReleased: {
+                    if (batteryTempGauge.isHoldingReset) {
+                        batteryTempGauge.isHoldingReset = false;
+                        if (batteryTempGauge.holdProgress < 1.0) {
+                            // Short click: Switch TRIP A -> TRIP B -> ODO with upward rotation
+                            batteryTempGauge.cycleTripRequested();
+                        }
+                        batteryTempGauge.holdProgress = 0.0;
+                    }
+                }
+
+                onCanceled: {
+                    batteryTempGauge.isHoldingReset = false;
+                    batteryTempGauge.holdProgress = 0.0;
+                }
             }
         }
     }
@@ -311,3 +465,6 @@ Item {
     onThemeColorChanged:     gaugeCanvas.requestPaint()
     Component.onCompleted:   gaugeCanvas.requestPaint()
 }
+
+
+

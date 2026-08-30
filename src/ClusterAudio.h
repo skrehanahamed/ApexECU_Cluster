@@ -49,4 +49,28 @@ public:
             QProcess::startDetached("afplay", QStringList() << path);
         }
     }
+
+    Q_INVOKABLE void playIndicatorChime(bool stateOn) {
+        QString path = stateOn 
+            ? "/Users/reno/Projects/ApexECU_Cluster/assets/audio/indicator_tick.wav"
+            : "/Users/reno/Projects/ApexECU_Cluster/assets/audio/indicator_tock.wav";
+        if (QFile::exists(path)) {
+            QProcess::startDetached("afplay", QStringList() << path);
+        }
+    }
+
+    Q_INVOKABLE void playIndicatorTick() {
+        QString path = "/Users/reno/Projects/ApexECU_Cluster/assets/audio/indicator_tick.wav";
+        if (QFile::exists(path)) {
+            QProcess::startDetached("afplay", QStringList() << path);
+        }
+    }
+
+    Q_INVOKABLE void playIndicatorTock() {
+        QString path = "/Users/reno/Projects/ApexECU_Cluster/assets/audio/indicator_tock.wav";
+        if (QFile::exists(path)) {
+            QProcess::startDetached("afplay", QStringList() << path);
+        }
+    }
 };
+

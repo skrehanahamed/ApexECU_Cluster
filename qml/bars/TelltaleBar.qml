@@ -17,6 +17,8 @@ Item {
     width: parent.width
     height: 38
 
+    signal tpmsClicked()
+
     // ═══════════════════════════════════════════════════════════════
     // TELLTALE STATES (ON / OFF TOGGLEABLE VIA ECU EMULATOR)
     // ═══════════════════════════════════════════════════════════════
@@ -32,6 +34,7 @@ Item {
     property bool battery12v:    true   // Red
     property bool tpms:          true   // Amber
     property bool evPlug:        true   // Amber
+    property bool neutral:       false  // Green (N mode)
 
     property bool autoHighBeam:  true   // Green
     property bool lowBeam:       true   // Green
@@ -47,10 +50,34 @@ Item {
         id: blinkTimer
         interval: 450
         repeat: true
-        running: telltaleBar.turnLeft || telltaleBar.turnRight
+        running: (telltaleBar.turnLeft || telltaleBar.turnRight) && !telltaleBar.bulbCheckActive
         property bool stateOn: true
-        onTriggered: stateOn = !stateOn
+        onTriggered: {
+            stateOn = !stateOn;
+            if (typeof clusterAudio !== "undefined" && (telltaleBar.turnLeft || telltaleBar.turnRight)) {
+                clusterAudio.playIndicatorChime(stateOn);
+            }
+        }
     }
+
+    onTurnLeftChanged: {
+        if (turnLeft && !telltaleBar.bulbCheckActive) {
+            blinkTimer.stateOn = true;
+            if (typeof clusterAudio !== "undefined") {
+                clusterAudio.playIndicatorChime(true);
+            }
+        }
+    }
+
+    onTurnRightChanged: {
+        if (turnRight && !telltaleBar.bulbCheckActive) {
+            blinkTimer.stateOn = true;
+            if (typeof clusterAudio !== "undefined") {
+                clusterAudio.playIndicatorChime(true);
+            }
+        }
+    }
+
 
     Row {
         id: iconsRow
@@ -159,13 +186,22 @@ Item {
             opacity: (telltaleBar.battery12v || telltaleBar.bulbCheckActive) ? 1.0 : 0.25
         }
 
-        // 9. TPMS TIRE PRESSURE (Amber)
-        Image {
+        // 9. TPMS TIRE PRESSURE (Amber) - Clickable to open/close 4-tire TPMS view
+        Item {
             width: 19; height: 19; anchors.verticalCenter: parent.verticalCenter
-            source: (telltaleBar.tpms || telltaleBar.bulbCheckActive) ? "../../assets/telltales/tpms_active.svg" : "../../assets/telltales/tpms_inactive.svg"
-            fillMode: Image.PreserveAspectFit
-            smooth: true
-            opacity: (telltaleBar.tpms || telltaleBar.bulbCheckActive) ? 1.0 : 0.25
+            Image {
+                anchors.fill: parent
+                source: (telltaleBar.tpms || telltaleBar.bulbCheckActive) ? "../../assets/telltales/tpms_active.svg" : "../../assets/telltales/tpms_inactive.svg"
+                fillMode: Image.PreserveAspectFit
+                smooth: true
+                opacity: (telltaleBar.tpms || telltaleBar.bulbCheckActive) ? 1.0 : 0.25
+            }
+            MouseArea {
+                anchors.fill: parent
+                cursorShape: Qt.PointingHandCursor
+                hoverEnabled: true
+                onClicked: telltaleBar.tpmsClicked()
+            }
         }
 
         // 10. EV CHARGE PLUG (Amber)
@@ -177,8 +213,14 @@ Item {
             opacity: (telltaleBar.evPlug || telltaleBar.bulbCheckActive) ? 1.0 : 0.25
         }
 
-        // Divider |
-        Rectangle { width: 1; height: 16; color: "#334155"; anchors.verticalCenter: parent.verticalCenter }
+        // 11. NEUTRAL GEAR TELLTALE (N) (Green)
+        Image {
+            width: 19; height: 19; anchors.verticalCenter: parent.verticalCenter
+            source: (telltaleBar.neutral || telltaleBar.bulbCheckActive) ? "../../assets/telltales/neutral_active.svg" : "../../assets/telltales/neutral_inactive.svg"
+            fillMode: Image.PreserveAspectFit
+            smooth: true
+            opacity: (telltaleBar.neutral || telltaleBar.bulbCheckActive) ? 1.0 : 0.25
+        }
 
         // 11. AUTO HIGH BEAM (A) (Green)
         Image {

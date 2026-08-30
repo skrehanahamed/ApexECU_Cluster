@@ -129,11 +129,22 @@ Window {
             } else if (event.key === Qt.Key_D) {
                 drivingCluster.toggleDriveMode();
                 event.accepted = true;
-            } else if (event.key === Qt.Key_T) {
+            } else if (event.key === Qt.Key_O || event.key === Qt.Key_T) {
+                // O or T: Cycle Trip Mode (TRIP A -> TRIP B -> ODO)
+                drivingCluster.cycleTripMode();
+                event.accepted = true;
+            } else if (event.key === Qt.Key_R) {
+                // R: Reset Active Trip A/B
+                drivingCluster.resetCurrentTrip();
+                event.accepted = true;
+            } else if (event.key === Qt.Key_W) {
                 drivingCluster.toggleAllWarnings();
                 event.accepted = true;
             } else if (event.key === Qt.Key_E || event.key === Qt.Key_Tab) {
                 drivingCluster.emulatorOpen = !drivingCluster.emulatorOpen;
+                event.accepted = true;
+            } else if (event.key === Qt.Key_P) {
+                drivingCluster.toggleTpms();
                 event.accepted = true;
             } else if (event.key === Qt.Key_Left) {
                 drivingCluster.telltaleTurnLeft = !drivingCluster.telltaleTurnLeft;

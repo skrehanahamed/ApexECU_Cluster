@@ -6,7 +6,7 @@ Item {
     width: parent.width * 0.28
     height: parent.height
 
-    property real powerKw: 145.0          // Instantaneous motor power (0 – 300 kW)
+    property real powerKw: 0.0            // Instantaneous motor power (0 – 300 kW)
     property real maxPowerKw: 300.0       // Maximum motor output (300 kW)
     property real regenValue: 0.0         // Regen braking level (0 - 50 kW)
     property bool regenActive: false
@@ -82,7 +82,7 @@ Item {
             }
 
             // 4. Active Power Arc
-            if (activeFraction > 0.02) {
+            if (activeFraction > 0.005) {
                 ctx.strokeStyle = "rgba(0, 229, 255, 0.16)";
                 ctx.lineWidth   = 13.0;
                 ctx.lineCap     = "round";
@@ -106,33 +106,35 @@ Item {
                 ctx.arc(centerX, centerY, radius, angle0, activeEndAngle, false);
                 ctx.stroke();
 
-                ctx.strokeStyle = "rgba(255, 255, 255, 0.7)";
-                ctx.lineWidth   = 1.2;
+                if (activeEndAngle > angle0 + 0.06) {
+                    ctx.strokeStyle = "rgba(255, 255, 255, 0.7)";
+                    ctx.lineWidth   = 1.2;
+                    ctx.beginPath();
+                    ctx.arc(centerX, centerY, radius, angle0 + 0.02, activeEndAngle - 0.02, false);
+                    ctx.stroke();
+                }
+
+                // 5. Active Bead Indicator
+                var tipX = centerX + radius * Math.cos(activeEndAngle);
+                var tipY = centerY + radius * Math.sin(activeEndAngle);
+
+                var tipGlow = ctx.createRadialGradient(tipX, tipY, 0, tipX, tipY, 13);
+                tipGlow.addColorStop(0.0, powerGauge.themeColor);
+                tipGlow.addColorStop(0.4, "transparent");
+                tipGlow.addColorStop(1.0, "transparent");
+                ctx.fillStyle = tipGlow;
                 ctx.beginPath();
-                ctx.arc(centerX, centerY, radius, angle0 + 0.02, activeEndAngle - 0.02, false);
-                ctx.stroke();
+                ctx.arc(tipX, tipY, 13, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.fillStyle = "#FFFFFF";
+                ctx.beginPath();
+                ctx.arc(tipX, tipY, 3.0, 0, Math.PI * 2);
+                ctx.fill();
             }
 
-            // 5. Active Bead Indicator
-            var tipX = centerX + radius * Math.cos(activeEndAngle);
-            var tipY = centerY + radius * Math.sin(activeEndAngle);
-
-            var tipGlow = ctx.createRadialGradient(tipX, tipY, 0, tipX, tipY, 13);
-            tipGlow.addColorStop(0.0, powerGauge.themeColor);
-            tipGlow.addColorStop(0.4, "transparent");
-            tipGlow.addColorStop(1.0, "transparent");
-            ctx.fillStyle = tipGlow;
-            ctx.beginPath();
-            ctx.arc(tipX, tipY, 13, 0, Math.PI * 2);
-            ctx.fill();
-
-            ctx.fillStyle = "#FFFFFF";
-            ctx.beginPath();
-            ctx.arc(tipX, tipY, 3.0, 0, Math.PI * 2);
-            ctx.fill();
-
             // 6. Bottom REGEN Label
-            ctx.font = "bold 10px sans-serif";
+            ctx.font = "bold 10px Arial";
             ctx.textBaseline = "middle";
             var rAngle = angle0 + totalSweep * 0.07;
             var rX = centerX + (radius - 18) * Math.cos(rAngle);
@@ -149,7 +151,7 @@ Item {
                 { val: "0",   frac: 0.00 }
             ];
 
-            ctx.font = "11px sans-serif";
+            ctx.font = "11px Arial";
             ctx.textAlign = "left";
 
             for (var i = 0; i < ticks.length; i++) {
@@ -193,10 +195,10 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
             text: "POWER"
             font.pixelSize: 13
-            font.weight: Font.Medium
+            font.weight: Font.DemiBold
             font.letterSpacing: 4.0
             font.capitalization: Font.AllUppercase
-            font.family: "sans-serif"
+            font.family: "Inter"
             color: "#94A3B8"
             renderType: Text.NativeRendering
         }
@@ -211,7 +213,7 @@ Item {
                 font.pixelSize: 54
                 font.weight: Font.Normal
                 font.letterSpacing: 1.0
-                font.family: "Menlo, Monaco, monospace"
+                font.family: "Inter"
                 color: "#FFFFFF"
                 renderType: Text.NativeRendering
             }
@@ -221,8 +223,8 @@ Item {
                 anchors.bottomMargin: 8
                 text: "kW"
                 font.pixelSize: 17
-                font.weight: Font.Normal
-                font.family: "Inter, sans-serif"
+                font.weight: Font.Medium
+                font.family: "Inter"
                 color: "#94A3B8"
                 renderType: Text.NativeRendering
             }
@@ -232,9 +234,9 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
             text: "DUAL MOTOR"
             font.pixelSize: 10
-            font.weight: Font.Normal
+            font.weight: Font.Medium
             font.letterSpacing: 1.5
-            font.family: "Inter, sans-serif"
+            font.family: "Inter"
             color: "#64748B"
             renderType: Text.NativeRendering
         }
