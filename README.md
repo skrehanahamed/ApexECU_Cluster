@@ -3,11 +3,30 @@
 [![Qt 6.11+](https://img.shields.io/badge/Qt-6.11%2B-41CD52?style=flat&logo=qt&logoColor=white)](https://www.qt.io/)
 [![C++17](https://img.shields.io/badge/Standard-C%2B%2B17-00599C?style=flat&logo=c%2B%2B&logoColor=white)](https://isocpp.org/)
 [![CMake](https://img.shields.io/badge/Build-CMake-064F8C?style=flat&logo=cmake&logoColor=white)](https://cmake.org/)
+[![Platform](https://img.shields.io/badge/Platform-macOS%20%7C%20Linux%20%7C%20Windows-lightgrey.svg)](https://github.com/)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 An ultra-modern, production-grade automotive digital instrument cluster and interactive ECU hardware-in-the-loop (HIL) simulation suite designed for luxury electric vehicles (EV). Built natively using **Qt 6 / QML** and high-performance **C++17**, featuring real-time 3-lane ADAS road perception, full-screen cinematic EV charging, 21 OEM telltales, comprehensive telemetry gauges, 6-door safety interlocks, and synthesized audio chimes.
 
 > **Latest Update (August 30, 2026)**: Major feature release introducing the dedicated standalone multi-tab ECU Telemetry Emulator window, cinematic full-screen EV fast-charging suite, interactive 6-door chassis access safety interlocks, 4-wheel independent TPMS overlay, and synthesized audio engine.
+
+---
+
+## Preview & Media Showcase
+
+### Application Demo Video
+
+https://github.com/user-attachments/assets/64170b31-a5b3-4ab9-87de-2bc2024274be
+
+### User Interface Screenshots
+
+| Digital Instrument Cluster | Dual-Window ECU Simulator |
+|:---:|:---:|
+| <img src="https://github.com/user-attachments/assets/dcce0c7c-6ab5-4de0-836a-6457eeafa08a" width="100%" alt="APEX Digital Instrument Cluster" /> | <img src="https://github.com/user-attachments/assets/c876664f-8a61-4271-b163-61c7874a2c2a" width="100%" alt="ECU Telemetry Simulator" /> |
+
+| Driver Assist (ADAS) 3D Highway View | 21-Card OEM Warning System |
+|:---:|:---:|
+| <img src="https://github.com/user-attachments/assets/c52de7f4-bf2d-482d-9084-630b2226b2c2" width="100%" alt="Driver Assist 3D Highway View" /> | <img src="https://github.com/user-attachments/assets/d80348f8-a05c-4f26-a82c-440ffebcd8a9" width="100%" alt="21-Card OEM Warning System" /> |
 
 ---
 
