@@ -75,7 +75,7 @@ https://github.com/user-attachments/assets/64170b31-a5b3-4ab9-87de-2bc2024274be
 #### 1. Interactive Automotive Map Engine (`RealTimeMapEngine.qml`)
 * **Dark CartoDB / OSM Slippy Map Canvas**: High-performance slippy map canvas using dark raster tiles with mathematical Spherical Mercator projection coordinate mapping (`lat/lon` ➔ tile indices).
 * **Interactive Viewport Controls**: Smooth touch/mouse pan gestures, step zoom controls (`+` / `-`), auto-centering on vehicle, and zoom-to-fit bounding box calculation.
-* **Click-to-Pin Waypoints**: Interactive pin placement mode (`🟢 Set Start` & `🏁 Set Dest`) allowing drivers/testers to drop arbitrary origin and destination pins anywhere on the world map.
+* **Click-to-Pin Waypoints**: Interactive pin placement mode (`Set Start` & `Set Dest`) allowing drivers/testers to drop arbitrary origin and destination pins anywhere on the world map.
 * **5 Global Pre-Configured Route Presets**: Instant one-click route loading for major testing hubs: *Bengaluru (MG Road to Outer Ring Road)*, *San Francisco (Market St to Golden Gate)*, *Tokyo (Shibuya to Ginza)*, *London (Westminster to Canary Wharf)*, and the legendary *Nürburgring Nordschleife*.
 * **Live Route Polyline & Marker Animation**: Smooth visual rendering of route polyline path segments and animated directional vehicle marker with real-time heading rotation.
 

@@ -182,27 +182,27 @@ jobs:
           tag_name: ${{ steps.version_step.outputs.tag }}
           name: "APEX Cluster ${{ steps.version_step.outputs.tag }}"
           body: |
-            ## 🏎️ APEX EV Digital Instrument Cluster & ECU Simulation Suite (${{ steps.version_step.outputs.tag }})
+            ## APEX EV Digital Instrument Cluster & ECU Simulation Suite (${{ steps.version_step.outputs.tag }})
 
             Automotive digital instrument cluster and hardware-in-the-loop (HIL) ECU simulation suite built natively with **Qt 6 / QML** and **C++17**.
 
-            ### 📦 Download Pre-Compiled Packages
+            ### Download Pre-Compiled Packages
 
             | Platform | File | Description |
             |:---|:---|:---|
-            | 🍎 **macOS** (14 Sonoma / 15 Sequoia) | `ApexCluster-macOS.zip` | Standalone `.app` bundle |
-            | 🐧 **Linux** (Ubuntu 22.04 / 24.04) | `ApexCluster-Linux.tar.gz` | Native 64-bit ELF binary |
-            | 🪟 **Windows** (10 / 11 64-bit) | `ApexCluster-Windows.zip` | Native MSVC `.exe` binary |
+            | **macOS** (14 Sonoma / 15 Sequoia) | `ApexCluster-macOS.zip` | Standalone `.app` bundle |
+            | **Linux** (Ubuntu 22.04 / 24.04) | `ApexCluster-Linux.tar.gz` | Native 64-bit ELF binary |
+            | **Windows** (10 / 11 64-bit) | `ApexCluster-Windows.zip` | Native MSVC `.exe` binary |
 
             ---
 
-            ### 🚀 What's Included in this Build
+            ### What's Included in this Build
 
-            * **Interactive Automotive Map Navigation Engine**: Real-time CartoDB / OSM slippy map engine with Spherical Mercator projections, pin placement (`🟢 Set Start` & `🏁 Set Dest`), 5 global route presets, and route polyline rendering.
+            * **Interactive Automotive Map Navigation Engine**: Real-time CartoDB / OSM slippy map engine with Spherical Mercator projections, pin placement (Set Start and Set Dest), 5 global route presets, and route polyline rendering.
             * **Native C++ Navigation Controller**: Asynchronous OSRM REST client, procedural fallback routing, cruise simulation, and telemetry interpolation.
             * **Cluster HUD Streaming**: Turn-by-turn maneuvers, countdowns, ETA, and 16-point dynamic compass bearings directly synchronized with the digital instrument cluster.
             * **Multi-Platform CI & Release Pipelines**: Fully automated compilation and static QML verification across macOS (Clang), Ubuntu Linux (GCC), and Windows (MSVC 2022 + Ninja).
-            * **Automated Continuous Packaging**: Built and packaged automatically from GitHub `main`.
+            * **Automated Continuous Packaging**: Built and packaged automatically from GitHub main.
           files: |
             dist/ApexCluster-macOS.zip
             dist/ApexCluster-Linux.tar.gz
