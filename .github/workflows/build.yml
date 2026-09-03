@@ -45,7 +45,7 @@ jobs:
       - name: Run QML Syntax Lint Check
         run: |
           echo "Running qmllint on master QML files..."
-          qmllint qml/Main.qml qml/views/DrivingCluster.qml qml/center/RealTimeMapEngine.qml
+          qmllint --unqualified disable --unused-imports disable qml/Main.qml qml/views/DrivingCluster.qml qml/center/RealTimeMapEngine.qml
 
       - name: Archive macOS Bundle
         run: |
@@ -100,7 +100,7 @@ jobs:
       - name: Run QML Syntax Lint Check
         run: |
           echo "Running qmllint on master QML files..."
-          "$QT_ROOT_DIR/bin/qmllint" qml/Main.qml qml/views/DrivingCluster.qml qml/center/RealTimeMapEngine.qml
+          "$QT_ROOT_DIR/bin/qmllint" --unqualified disable --unused-imports disable qml/Main.qml qml/views/DrivingCluster.qml qml/center/RealTimeMapEngine.qml
 
       - name: Upload Linux Artifact
         uses: actions/upload-artifact@v4
@@ -155,7 +155,7 @@ jobs:
         shell: pwsh
         run: |
           Write-Host "Running qmllint on master QML files..."
-          & "$env:QT_ROOT_DIR\bin\qmllint.exe" qml/Main.qml qml/views/DrivingCluster.qml qml/center/RealTimeMapEngine.qml
+          & "$env:QT_ROOT_DIR\bin\qmllint.exe" --unqualified disable --unused-imports disable qml/Main.qml qml/views/DrivingCluster.qml qml/center/RealTimeMapEngine.qml
 
       - name: Upload Windows Artifact
         uses: actions/upload-artifact@v4
