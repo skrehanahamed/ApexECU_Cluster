@@ -163,6 +163,28 @@ jobs:
         with:
           tag_name: ${{ github.event.inputs.version || github.ref_name }}
           name: ${{ github.event.inputs.version || github.ref_name }}
+          body: |
+            ## 🏎️ APEX EV Digital Instrument Cluster & ECU Simulation Suite
+
+            Automotive digital instrument cluster and hardware-in-the-loop (HIL) ECU simulation suite built natively with **Qt 6 / QML** and **C++17**.
+
+            ### 📦 Download Pre-Compiled Packages
+
+            | Platform | File | Description |
+            |:---|:---|:---|
+            | 🍎 **macOS** (14 Sonoma / 15 Sequoia) | `ApexCluster-macOS.zip` | Standalone `.app` bundle |
+            | 🐧 **Linux** (Ubuntu 22.04 / 24.04) | `ApexCluster-Linux.tar.gz` | Native 64-bit ELF binary |
+            | 🪟 **Windows** (10 / 11 64-bit) | `ApexCluster-Windows.zip` | Native MSVC `.exe` binary |
+
+            ---
+
+            ### 🚀 What's New in this Release
+
+            * **Interactive Automotive Map Navigation Engine**: Real-time CartoDB / OSM slippy map engine with Spherical Mercator projections, pin placement (`🟢 Set Start` & `🏁 Set Dest`), 5 global route presets, and route polyline rendering.
+            * **Native C++ Navigation Controller**: Asynchronous OSRM REST client, procedural fallback routing, cruise simulation, and telemetry interpolation.
+            * **Cluster HUD Streaming**: Turn-by-turn maneuvers, countdowns, ETA, and 16-point dynamic compass bearings directly synchronized with the digital instrument cluster.
+            * **Multi-Platform CI & Release Pipelines**: Fully automated compilation and static QML verification across macOS (Clang), Ubuntu Linux (GCC), and Windows (MSVC 2022 + Ninja).
+            * **Automated Packaging**: Every release includes pre-built standalone packages for all major operating systems.
           files: |
             dist/ApexCluster-macOS.zip
             dist/ApexCluster-Linux.tar.gz
