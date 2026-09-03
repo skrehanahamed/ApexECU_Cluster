@@ -2,14 +2,16 @@ name: Release Version
 
 on:
   push:
+    branches:
+      - main
     tags:
       - 'v*'
   workflow_dispatch:
     inputs:
       version:
-        description: 'Version tag to release (e.g. v1.2.1)'
-        required: true
-        default: 'v1.2.1'
+        description: 'Version tag to release (leave blank to auto-detect from CMakeLists.txt)'
+        required: false
+        default: ''
 
 permissions:
   contents: write
@@ -139,6 +141,22 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Determine Release Version
+        id: version_step
+        run: |
+          if [ -n "${{ github.event.inputs.version }}" ]; then
+            TAG="${{ github.event.inputs.version }}"
+          elif [[ "${{ github.ref }}" == refs/tags/* ]]; then
+            TAG="${{ github.ref_name }}"
+          else
+            DETECTED=$(grep -oE "VERSION [0-9]+\.[0-9]+\.[0-9]+" CMakeLists.txt | head -n 1 | awk '{print "v"$2}')
+            TAG="${DETECTED:-v1.2.1}"
+          fi
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+          echo "Selected release tag: $TAG"
 
       - name: Download macOS Asset
         uses: actions/download-artifact@v4
@@ -158,13 +176,13 @@ jobs:
           name: release-windows
           path: dist
 
-      - name: Create GitHub Release
+      - name: Create or Update GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ github.event.inputs.version || github.ref_name }}
-          name: ${{ github.event.inputs.version || github.ref_name }}
+          tag_name: ${{ steps.version_step.outputs.tag }}
+          name: "APEX Cluster ${{ steps.version_step.outputs.tag }}"
           body: |
-            ## 🏎️ APEX EV Digital Instrument Cluster & ECU Simulation Suite
+            ## 🏎️ APEX EV Digital Instrument Cluster & ECU Simulation Suite (${{ steps.version_step.outputs.tag }})
 
             Automotive digital instrument cluster and hardware-in-the-loop (HIL) ECU simulation suite built natively with **Qt 6 / QML** and **C++17**.
 
@@ -178,17 +196,18 @@ jobs:
 
             ---
 
-            ### 🚀 What's New in this Release
+            ### 🚀 What's Included in this Build
 
             * **Interactive Automotive Map Navigation Engine**: Real-time CartoDB / OSM slippy map engine with Spherical Mercator projections, pin placement (`🟢 Set Start` & `🏁 Set Dest`), 5 global route presets, and route polyline rendering.
             * **Native C++ Navigation Controller**: Asynchronous OSRM REST client, procedural fallback routing, cruise simulation, and telemetry interpolation.
             * **Cluster HUD Streaming**: Turn-by-turn maneuvers, countdowns, ETA, and 16-point dynamic compass bearings directly synchronized with the digital instrument cluster.
             * **Multi-Platform CI & Release Pipelines**: Fully automated compilation and static QML verification across macOS (Clang), Ubuntu Linux (GCC), and Windows (MSVC 2022 + Ninja).
-            * **Automated Packaging**: Every release includes pre-built standalone packages for all major operating systems.
+            * **Automated Continuous Packaging**: Built and packaged automatically from GitHub `main`.
           files: |
             dist/ApexCluster-macOS.zip
             dist/ApexCluster-Linux.tar.gz
             dist/ApexCluster-Windows.zip
           draft: false
           prerelease: false
+          make_latest: true
           generate_release_notes: true
