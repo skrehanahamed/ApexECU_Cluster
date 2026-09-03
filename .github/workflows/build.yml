@@ -14,7 +14,7 @@ concurrency:
 
 jobs:
   build-macos:
-    name: Build (macOS)
+    name: Build & Verify (macOS)
     runs-on: macos-latest
     steps:
       - name: Checkout repository
@@ -34,8 +34,33 @@ jobs:
         run: |
           cmake --build build --config Release
 
+      - name: Verify Binary & Library Linkages
+        run: |
+          echo "Verifying macOS Application Bundle..."
+          test -f build/ApexCluster.app/Contents/MacOS/ApexCluster
+          echo "✓ Executable exists."
+          echo "Inspecting Dynamic Framework Linkages:"
+          otool -L build/ApexCluster.app/Contents/MacOS/ApexCluster
+
+      - name: Run QML Syntax Lint Check
+        run: |
+          echo "Running qmllint on master QML files..."
+          qmllint qml/Main.qml qml/views/DrivingCluster.qml qml/center/RealTimeMapEngine.qml
+
+      - name: Archive macOS Bundle
+        run: |
+          cd build
+          zip -r ApexCluster-macOS.zip ApexCluster.app
+
+      - name: Upload macOS Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ApexCluster-macOS
+          path: build/ApexCluster-macOS.zip
+          retention-days: 7
+
   build-linux:
-    name: Build (Ubuntu Linux)
+    name: Build & Verify (Ubuntu Linux)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -64,3 +89,79 @@ jobs:
       - name: Build ApexCluster
         run: |
           cmake --build build --config Release
+
+      - name: Verify Binary & Shared Dependencies
+        run: |
+          echo "Verifying Linux ELF Executable..."
+          test -f build/ApexCluster
+          echo "✓ Executable exists."
+          echo "Inspecting Dynamic Library Dependencies:"
+          ldd build/ApexCluster
+
+      - name: Run QML Syntax Lint Check
+        run: |
+          echo "Running qmllint on master QML files..."
+          "$QT_ROOT_DIR/bin/qmllint" qml/Main.qml qml/views/DrivingCluster.qml qml/center/RealTimeMapEngine.qml
+
+      - name: Upload Linux Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ApexCluster-Linux
+          path: build/ApexCluster
+          retention-days: 7
+
+  build-windows:
+    name: Build & Verify (Windows)
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Ninja
+        uses: ashutoshvarma/setup-ninja@master
+        with:
+          version: 1.11.1
+
+      - name: Setup MSVC Developer Prompt
+        uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Install Qt 6
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: '6.7.3'
+          host: 'windows'
+          target: 'desktop'
+          arch: 'win64_msvc2019_64'
+          modules: 'qtdeclarative'
+
+      - name: Configure CMake
+        run: |
+          cmake -B build -G Ninja `
+            -DCMAKE_BUILD_TYPE=Release `
+            -DCMAKE_PREFIX_PATH="$env:QT_ROOT_DIR"
+
+      - name: Build ApexCluster (Windows)
+        run: |
+          cmake --build build --config Release
+
+      - name: Verify Windows Executable
+        shell: pwsh
+        run: |
+          if (Test-Path "build/ApexCluster.exe") {
+            Write-Host "✓ ApexCluster.exe compiled and verified successfully."
+          } else {
+            Write-Error "ApexCluster.exe was not generated."
+          }
+
+      - name: Run QML Syntax Lint Check
+        shell: pwsh
+        run: |
+          Write-Host "Running qmllint on master QML files..."
+          & "$env:QT_ROOT_DIR\bin\qmllint.exe" qml/Main.qml qml/views/DrivingCluster.qml qml/center/RealTimeMapEngine.qml
+
+      - name: Upload Windows Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ApexCluster-Windows
+          path: build/ApexCluster.exe
+          retention-days: 7

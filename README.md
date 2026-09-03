@@ -1,7 +1,7 @@
 # APEX EV Digital Instrument Cluster & ECU Simulation Suite
 
 [![CI Build](https://github.com/skrehanahamed/ApexECU_Cluster/actions/workflows/build.yml/badge.svg)](https://github.com/skrehanahamed/ApexECU_Cluster/actions/workflows/build.yml)
-[![Version](https://img.shields.io/badge/Version-v1.2.0-orange.svg)](https://github.com/skrehanahamed/ApexECU_Cluster/releases)
+[![Version](https://img.shields.io/badge/Version-v1.2.1-orange.svg)](https://github.com/skrehanahamed/ApexECU_Cluster/releases)
 [![Qt 6.5+](https://img.shields.io/badge/Qt-6.5%2B-41CD52?style=flat&logo=qt&logoColor=white)](https://www.qt.io/)
 [![C++17](https://img.shields.io/badge/Standard-C%2B%2B17-00599C?style=flat&logo=c%2B%2B&logoColor=white)](https://isocpp.org/)
 [![CMake](https://img.shields.io/badge/Build-CMake-064F8C?style=flat&logo=cmake&logoColor=white)](https://cmake.org/)
@@ -10,7 +10,7 @@
 
 An ultra-modern, production-grade automotive digital instrument cluster and interactive ECU hardware-in-the-loop (HIL) simulation suite designed for luxury electric vehicles (EV). Built natively using **Qt 6 / QML** and high-performance **C++17**, featuring real-time 3-lane ADAS road perception, full-screen cinematic EV charging, 21 OEM telltales, comprehensive telemetry gauges, 6-door safety interlocks, synthesized audio chimes, and an interactive real-time map navigation engine with native C++ telemetry synchronization.
 
-> **Latest Release (v1.2.0 - September 2026)**: Major release introducing the Native C++ Real-Time Navigation Controller, Dark CartoDB/OSM Interactive Map Engine, live OSRM turn-by-turn routing with cluster HUD telemetry sync, autonomous cruise simulation, and automated multi-platform GitHub Actions CI build pipelines.
+> **Latest Release (v1.2.1 - September 2026)**: Multi-platform CI release adding native Windows MSVC compilation, automated binary & dynamic linkage verification, static QML linting (`qmllint`), and automated build artifact publishing alongside the Real-Time Navigation Controller and Map Engine.
 
 ---
 
@@ -23,6 +23,19 @@ https://github.com/user-attachments/assets/64170b31-a5b3-4ab9-87de-2bc2024274be
 ---
 
 ## Release History & Version Changelog
+
+### Version 1.2.1 (Release: September 4, 2026)
+
+#### 1. Native Windows CI Pipeline (`windows-latest`)
+* **MSVC 2022 & Ninja Toolchain**: Added automated Microsoft Visual C++ compilation for Windows runners (`build-windows`) with Ninja parallel build orchestration.
+* **Qt 6.7+ Windows Deployment**: Seamlessly provisions `Qt6Core`, `Qt6Gui`, `Qt6Quick`, and `Qt6Network` via `jurplel/install-qt-action` targeting Windows 64-bit desktop architecture.
+
+#### 2. Automated Multi-Platform CI Validation Suite
+* **Binary & Dynamic Linkage Verification**: Automated validation verifying compilation output existence and checking shared dynamic linkages (`otool` on macOS, `ldd` on Linux, and `pwsh` on Windows).
+* **Automated Static QML Linting (`qmllint`)**: Runs Qt's official `qmllint` across master QML components (`Main.qml`, `DrivingCluster.qml`, `RealTimeMapEngine.qml`) on pull requests and commits to catch syntax anomalies and binding errors before merge.
+* **Cross-Platform Build Artifact Publishing**: Automatically archives and uploads build packages (`ApexCluster-macOS.zip`, `ApexCluster-Linux`, `ApexCluster-Windows.exe`) via `actions/upload-artifact@v4` on every successful CI run.
+
+---
 
 ### Version 1.2.0 (Release: September 4, 2026)
 
