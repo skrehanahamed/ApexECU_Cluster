@@ -28,6 +28,7 @@ set_target_properties(ApexCluster PROPERTIES
 
 qt_add_qml_module(ApexCluster
     URI ApexCluster
+    OUTPUT_DIRECTORY qml_modules/ApexCluster
     VERSION 1.0
     QML_FILES
         qml/Main.qml
