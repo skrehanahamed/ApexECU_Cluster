@@ -1,0 +1,172 @@
+name: Release Version
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version tag to release (e.g. v1.2.1)'
+        required: true
+        default: 'v1.2.1'
+
+permissions:
+  contents: write
+
+jobs:
+  build-macos:
+    name: Package (macOS)
+    runs-on: macos-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies (macOS)
+        run: |
+          brew install qt cmake ninja
+
+      - name: Configure CMake
+        run: |
+          cmake -B build -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_PREFIX_PATH="$(brew --prefix qt)"
+
+      - name: Build ApexCluster
+        run: |
+          cmake --build build --config Release
+
+      - name: Package macOS App
+        run: |
+          cd build
+          zip -r ApexCluster-macOS.zip ApexCluster.app
+
+      - name: Upload macOS Asset
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-macos
+          path: build/ApexCluster-macOS.zip
+
+  build-linux:
+    name: Package (Linux)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Linux build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ninja-build libgl1-mesa-dev libxkbcommon-dev libvulkan-dev
+
+      - name: Install Qt 6
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: '6.7.3'
+          host: 'linux'
+          target: 'desktop'
+          arch: 'linux_gcc_64'
+
+      - name: Configure CMake
+        run: |
+          cmake -B build -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_PREFIX_PATH="$QT_ROOT_DIR"
+
+      - name: Build ApexCluster
+        run: |
+          cmake --build build --config Release
+
+      - name: Package Linux Binary
+        run: |
+          cd build
+          tar -czf ApexCluster-Linux.tar.gz ApexCluster
+
+      - name: Upload Linux Asset
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-linux
+          path: build/ApexCluster-Linux.tar.gz
+
+  build-windows:
+    name: Package (Windows)
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Ninja
+        uses: ashutoshvarma/setup-ninja@master
+        with:
+          version: 1.11.1
+
+      - name: Setup MSVC Developer Prompt
+        uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Install Qt 6
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: '6.7.3'
+          host: 'windows'
+          target: 'desktop'
+          arch: 'win64_msvc2019_64'
+
+      - name: Configure CMake
+        run: |
+          cmake -B build -G Ninja `
+            -DCMAKE_BUILD_TYPE=Release `
+            -DCMAKE_PREFIX_PATH="$env:QT_ROOT_DIR"
+
+      - name: Build ApexCluster (Windows)
+        run: |
+          cmake --build build --config Release
+
+      - name: Package Windows Binary
+        shell: pwsh
+        run: |
+          Compress-Archive -Path build/ApexCluster.exe -DestinationPath build/ApexCluster-Windows.zip
+
+      - name: Upload Windows Asset
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-windows
+          path: build/ApexCluster-Windows.zip
+
+  publish-release:
+    name: Publish GitHub Release
+    needs: [build-macos, build-linux, build-windows]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download macOS Asset
+        uses: actions/download-artifact@v4
+        with:
+          name: release-macos
+          path: dist
+
+      - name: Download Linux Asset
+        uses: actions/download-artifact@v4
+        with:
+          name: release-linux
+          path: dist
+
+      - name: Download Windows Asset
+        uses: actions/download-artifact@v4
+        with:
+          name: release-windows
+          path: dist
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.event.inputs.version || github.ref_name }}
+          name: ${{ github.event.inputs.version || github.ref_name }}
+          files: |
+            dist/ApexCluster-macOS.zip
+            dist/ApexCluster-Linux.tar.gz
+            dist/ApexCluster-Windows.zip
+          draft: false
+          prerelease: false
+          generate_release_notes: true
