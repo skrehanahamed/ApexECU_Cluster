@@ -5,9 +5,13 @@
 #include <QSurfaceFormat>
 #include <QFontDatabase>
 #include "ClusterAudio.h"
+#include "NavigationController.h"
 
 int main(int argc, char *argv[])
 {
+    // Force HTTP/1.1 to prevent remote map tile servers from throwing HTTP/2 stream errors
+    qputenv("QT_ENABLE_HTTP2", "0");
+
     QGuiApplication app(argc, argv);
     app.setApplicationName("APEX SUV - Quiet Luxury Cluster");
     app.setOrganizationName("ApexAutomotive");
@@ -29,8 +33,11 @@ int main(int argc, char *argv[])
     // Play startup chime on launch
     clusterAudio.playStartupChime();
 
+    NavigationController navigationController;
+
     QQmlApplicationEngine engine;
     engine.rootContext()->setContextProperty("clusterAudio", &clusterAudio);
+    engine.rootContext()->setContextProperty("navigationController", &navigationController);
 
     QObject::connect(
         &engine,

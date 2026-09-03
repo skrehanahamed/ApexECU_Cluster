@@ -1137,7 +1137,7 @@ Rectangle {
     }
 
     // ═══════════════════════════════════════════════════════════════
-    // TAB 2: 🧭 NAVIGATION, COMPASS & TERRAIN
+    // TAB 2: 🧭 NAVIGATION, REAL-TIME MAP & TERRAIN
     // ═══════════════════════════════════════════════════════════════
     ScrollView {
         id: tab2View
@@ -1150,57 +1150,187 @@ Rectangle {
         contentWidth: availableWidth
         clip: true
 
+        property int navSubTab: 0 // 0: Real-Time Interactive Map, 1: Manual Step Overrides
+
         Column {
             width: parent.width
-            spacing: 16
+            spacing: 14
 
-            // Navigation Status & Mode
+            // Sub-Mode Header Tabs: Interactive Map vs Manual Controls
+            Row {
+                width: parent.width
+                spacing: 10
+
+                Rectangle {
+                    width: (parent.width - 10) / 2
+                    height: 32
+                    radius: 6
+                    color: tab2View.navSubTab === 0 ? "#0284C7" : "#1E293B"
+                    border.color: tab2View.navSubTab === 0 ? "#38BDF8" : "#334155"
+
+                    Row {
+                        anchors.centerIn: parent
+                        spacing: 6
+                        Text { text: "🗺️"; font.pixelSize: 12 }
+                        Text { text: "Real-Time Map & Controller"; color: "#FFFFFF"; font.pixelSize: 11; font.weight: Font.Bold }
+                    }
+
+                    MouseArea {
+                        anchors.fill: parent; cursorShape: Qt.PointingHandCursor
+                        onClicked: tab2View.navSubTab = 0
+                    }
+                }
+
+                Rectangle {
+                    width: (parent.width - 10) / 2
+                    height: 32
+                    radius: 6
+                    color: tab2View.navSubTab === 1 ? "#0284C7" : "#1E293B"
+                    border.color: tab2View.navSubTab === 1 ? "#38BDF8" : "#334155"
+
+                    Row {
+                        anchors.centerIn: parent
+                        spacing: 6
+                        Text { text: "🎛️"; font.pixelSize: 12 }
+                        Text { text: "Quick Overrides & Terrain"; color: "#FFFFFF"; font.pixelSize: 11; font.weight: Font.Bold }
+                    }
+
+                    MouseArea {
+                        anchors.fill: parent; cursorShape: Qt.PointingHandCursor
+                        onClicked: tab2View.navSubTab = 1
+                    }
+                }
+            }
+
+            // 1. SUB-VIEW 0: NATIVE REAL-TIME INTERACTIVE MAP ENGINE
+            RealTimeMapEngine {
+                id: realTimeMap
+                width: parent.width
+                height: 480
+                visible: tab2View.navSubTab === 0
+                clusterTarget: emulatorPanel.clusterTarget
+            }
+
+            // 2. SUB-VIEW 1: MANUAL OVERRIDES (FOR RAPID TESTING)
             Column {
                 width: parent.width
-                spacing: 8
+                spacing: 14
+                visible: tab2View.navSubTab === 1
 
-                Row {
+                // Navigation Status & Mode
+                Column {
                     width: parent.width
-                    Text { text: "🧭 Turn-by-Turn Navigation State"; font.pixelSize: 12; font.weight: Font.Bold; color: "#E2E8F0"; anchors.verticalCenter: parent.verticalCenter }
-                    Item { Layout.fillWidth: true; width: 10 }
+                    spacing: 8
 
-                    Rectangle {
-                        width: 100; height: 26; radius: 5
-                        color: (clusterTarget && clusterTarget.navActive) ? "#0284C7" : "#334155"
-                        Text { anchors.centerIn: parent; text: (clusterTarget && clusterTarget.navActive) ? "NAV: ACTIVE" : "NAV: OFF"; font.pixelSize: 10; font.weight: Font.Bold; color: "#FFFFFF" }
-                        MouseArea {
-                            anchors.fill: parent; cursorShape: Qt.PointingHandCursor
-                            onClicked: { if (clusterTarget) clusterTarget.navActive = !clusterTarget.navActive; }
+                    Row {
+                        width: parent.width
+                        Text { text: "🧭 Turn-by-Turn Navigation State"; font.pixelSize: 12; font.weight: Font.Bold; color: "#E2E8F0"; anchors.verticalCenter: parent.verticalCenter }
+                        Item { Layout.fillWidth: true; width: 10 }
+
+                        Rectangle {
+                            width: 100; height: 26; radius: 5
+                            color: (clusterTarget && clusterTarget.navActive) ? "#0284C7" : "#334155"
+                            Text { anchors.centerIn: parent; text: (clusterTarget && clusterTarget.navActive) ? "NAV: ACTIVE" : "NAV: OFF"; font.pixelSize: 10; font.weight: Font.Bold; color: "#FFFFFF" }
+                            MouseArea {
+                                anchors.fill: parent; cursorShape: Qt.PointingHandCursor
+                                onClicked: { if (clusterTarget) clusterTarget.navActive = !clusterTarget.navActive; }
+                            }
+                        }
+                    }
+
+                    // Nav State Selector (GUIDING, RECALCULATING, ARRIVED, GPS_LOST)
+                    Row {
+                        spacing: 8
+                        width: parent.width
+                        Repeater {
+                            model: [
+                                { id: "GUIDING",       name: "🟢 Guiding" },
+                                { id: "RECALCULATING", name: "🔄 Reroute" },
+                                { id: "ARRIVED",       name: "🏁 Arrived" },
+                                { id: "GPS_LOST",      name: "📡 GPS Lost" }
+                            ]
+                            Rectangle {
+                                width: (parent.width - 24) / 4
+                                height: 30
+                                radius: 6
+                                color: (clusterTarget && clusterTarget.navState === modelData.id) ? "#0284C7" : "#1E293B"
+                                border.color: (clusterTarget && clusterTarget.navState === modelData.id) ? "#38BDF8" : "#475569"
+
+                                Text { anchors.centerIn: parent; text: modelData.name; font.pixelSize: 10; font.weight: Font.Bold; color: "#FFFFFF" }
+                                MouseArea {
+                                    anchors.fill: parent; cursorShape: Qt.PointingHandCursor
+                                    onClicked: {
+                                        if (clusterTarget) {
+                                            clusterTarget.navState = modelData.id;
+                                            clusterTarget.gpsLost = (modelData.id === "GPS_LOST");
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }
 
-                // Nav State Selector (GUIDING, RECALCULATING, ARRIVED, GPS_LOST)
-                Row {
-                    spacing: 8
+                // Maneuver Direction Selector
+                Column {
                     width: parent.width
-                    Repeater {
-                        model: [
-                            { id: "GUIDING",       name: "🟢 Guiding" },
-                            { id: "RECALCULATING", name: "🔄 Reroute" },
-                            { id: "ARRIVED",       name: "🏁 Arrived" },
-                            { id: "GPS_LOST",      name: "📡 GPS Lost" }
-                        ]
-                        Rectangle {
-                            width: (parent.width - 24) / 4
-                            height: 30
-                            radius: 6
-                            color: (clusterTarget && clusterTarget.navState === modelData.id) ? "#0284C7" : "#1E293B"
-                            border.color: (clusterTarget && clusterTarget.navState === modelData.id) ? "#38BDF8" : "#475569"
+                    spacing: 6
+                    Text { text: "Next Turn Maneuver"; font.pixelSize: 11; font.weight: Font.Bold; color: "#CBD5E1" }
 
-                            Text { anchors.centerIn: parent; text: modelData.name; font.pixelSize: 10; font.weight: Font.Bold; color: "#FFFFFF" }
-                            MouseArea {
-                                anchors.fill: parent; cursorShape: Qt.PointingHandCursor
-                                onClicked: {
-                                    if (clusterTarget) {
-                                        clusterTarget.navState = modelData.id;
-                                        clusterTarget.gpsLost = (modelData.id === "GPS_LOST");
-                                    }
+                    Grid {
+                        columns: 3
+                        spacing: 8
+                        width: parent.width
+
+                        Repeater {
+                            model: [
+                                { id: "turn_right",   name: "➡️ Turn Right" },
+                                { id: "turn_left",    name: "⬅️ Turn Left" },
+                                { id: "slight_right", name: "↗️ Fork Right" },
+                                { id: "straight",     name: "⬆️ Straight" },
+                                { id: "roundabout",   name: "🔄 Roundabout" },
+                                { id: "u_turn",       name: "↩️ U-Turn" }
+                            ]
+
+                            Rectangle {
+                                width: (parent.width - 16) / 3
+                                height: 32
+                                radius: 6
+                                color: (clusterTarget && clusterTarget.navManeuver === modelData.id) ? "#059669" : "#1E293B"
+                                border.color: (clusterTarget && clusterTarget.navManeuver === modelData.id) ? "#34D399" : "#475569"
+
+                                Text { anchors.centerIn: parent; text: modelData.name; font.pixelSize: 11; font.weight: Font.Bold; color: "#FFFFFF" }
+                                MouseArea {
+                                    anchors.fill: parent; cursorShape: Qt.PointingHandCursor
+                                    onClicked: { if (clusterTarget) clusterTarget.navManeuver = modelData.id; }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // Compass Heading Buttons (N to NW)
+                Column {
+                    width: parent.width
+                    spacing: 6
+                    Text { text: "Compass Heading (" + (clusterTarget ? clusterTarget.compassHeading : "SW") + ")"; font.pixelSize: 11; font.weight: Font.Bold; color: "#CBD5E1" }
+
+                    Row {
+                        spacing: 6
+                        width: parent.width
+                        Repeater {
+                            model: ["N", "NE", "E", "SE", "S", "SW", "W", "NW"]
+                            Rectangle {
+                                width: (parent.width - 42) / 8
+                                height: 30
+                                radius: 5
+                                color: (clusterTarget && clusterTarget.compassHeading === modelData) ? "#0284C7" : "#1E293B"
+                                border.color: (clusterTarget && clusterTarget.compassHeading === modelData) ? "#00E5FF" : "#475569"
+
+                                Text { anchors.centerIn: parent; text: modelData; font.pixelSize: 11; font.weight: Font.Bold; color: (clusterTarget && clusterTarget.compassHeading === modelData) ? "#FFFFFF" : "#94A3B8" }
+                                MouseArea {
+                                    anchors.fill: parent; cursorShape: Qt.PointingHandCursor
+                                    onClicked: { if (clusterTarget) clusterTarget.compassHeading = modelData; }
                                 }
                             }
                         }
@@ -1208,143 +1338,85 @@ Rectangle {
                 }
             }
 
-            // Maneuver Direction Selector
+            // 3. TERRAIN MODULE (ELEVATION & INCLINOMETER)
             Column {
                 width: parent.width
-                spacing: 6
-                Text { text: "Next Turn Maneuver"; font.pixelSize: 11; font.weight: Font.Bold; color: "#CBD5E1" }
+                spacing: 12
 
-                Grid {
-                    columns: 3
-                    spacing: 8
-                    width: parent.width
+                Rectangle { width: parent.width; height: 1; color: "#1E293B" }
 
-                    Repeater {
-                        model: [
-                            { id: "turn_right",   name: "➡️ Turn Right" },
-                            { id: "turn_left",    name: "⬅️ Turn Left" },
-                            { id: "slight_right", name: "↗️ Fork Right" },
-                            { id: "straight",     name: "⬆️ Straight" },
-                            { id: "roundabout",   name: "🔄 Roundabout" },
-                            { id: "u_turn",       name: "↩️ U-Turn" }
-                        ]
-
-                        Rectangle {
-                            width: (parent.width - 16) / 3
-                            height: 32
-                            radius: 6
-                            color: (clusterTarget && clusterTarget.navManeuver === modelData.id) ? "#059669" : "#1E293B"
-                            border.color: (clusterTarget && clusterTarget.navManeuver === modelData.id) ? "#34D399" : "#475569"
-
-                            Text { anchors.centerIn: parent; text: modelData.name; font.pixelSize: 11; font.weight: Font.Bold; color: "#FFFFFF" }
-                            MouseArea {
-                                anchors.fill: parent; cursorShape: Qt.PointingHandCursor
-                                onClicked: { if (clusterTarget) clusterTarget.navManeuver = modelData.id; }
-                            }
-                        }
-                    }
-                }
-            }
-
-            // Compass Heading Buttons (N to NW)
-            Column {
-                width: parent.width
-                spacing: 6
-                Text { text: "Compass Heading (" + (clusterTarget ? clusterTarget.compassHeading : "SW") + ")"; font.pixelSize: 11; font.weight: Font.Bold; color: "#CBD5E1" }
-
-                Row {
-                    spacing: 6
-                    width: parent.width
-                    Repeater {
-                        model: ["N", "NE", "E", "SE", "S", "SW", "W", "NW"]
-                        Rectangle {
-                            width: (parent.width - 42) / 8
-                            height: 30
-                            radius: 5
-                            color: (clusterTarget && clusterTarget.compassHeading === modelData) ? "#0284C7" : "#1E293B"
-                            border.color: (clusterTarget && clusterTarget.compassHeading === modelData) ? "#00E5FF" : "#475569"
-
-                            Text { anchors.centerIn: parent; text: modelData; font.pixelSize: 11; font.weight: Font.Bold; color: (clusterTarget && clusterTarget.compassHeading === modelData) ? "#FFFFFF" : "#94A3B8" }
-                            MouseArea {
-                                anchors.fill: parent; cursorShape: Qt.PointingHandCursor
-                                onClicked: { if (clusterTarget) clusterTarget.compassHeading = modelData; }
-                            }
-                        }
-                    }
-                }
-            }
-
-            // Elevation Slider (0 m to 3500 m)
-            Column {
-                width: parent.width
-                spacing: 4
-
-                Row {
-                    width: parent.width
-                    Text { text: "Elevation Altitude Above Sea Level"; font.pixelSize: 11; font.weight: Font.Bold; color: "#CBD5E1" }
-                    Item { Layout.fillWidth: true; width: 10 }
-                    Text {
-                        text: (clusterTarget ? clusterTarget.elevationM : 1250) + " m"
-                        font.pixelSize: 13; font.weight: Font.Bold; color: "#00e5ff"
-                    }
-                }
-
-                Slider {
-                    width: parent.width
-                    from: 0
-                    to: 3500
-                    value: clusterTarget ? clusterTarget.elevationM : 1250
-                    stepSize: 25
-                    onMoved: { if (clusterTarget) clusterTarget.elevationM = Math.round(value); }
-                }
-            }
-
-            // Off-Road Pitch & Roll Sliders
-            Row {
-                width: parent.width
-                spacing: 14
-
-                // Pitch
+                // Elevation Slider (0 m to 3500 m)
                 Column {
-                    width: (parent.width - 14) / 2
+                    width: parent.width
                     spacing: 4
+
                     Row {
                         width: parent.width
-                        Text { text: "Pitch Angle"; font.pixelSize: 11; font.weight: Font.Bold; color: "#CBD5E1" }
+                        Text { text: "⛰️ Elevation Altitude Above Sea Level"; font.pixelSize: 11; font.weight: Font.Bold; color: "#CBD5E1" }
                         Item { Layout.fillWidth: true; width: 10 }
                         Text {
-                            text: (clusterTarget ? (clusterTarget.terrainPitchDeg >= 0 ? "+" : "") + Math.round(clusterTarget.terrainPitchDeg) : "+8") + "°"
-                            font.pixelSize: 12; font.weight: Font.Bold; color: "#38BDF8"
+                            text: (clusterTarget ? clusterTarget.elevationM : 1250) + " m"
+                            font.pixelSize: 13; font.weight: Font.Bold; color: "#00e5ff"
                         }
                     }
+
                     Slider {
                         width: parent.width
-                        from: -25; to: 25
-                        value: clusterTarget ? clusterTarget.terrainPitchDeg : 8
-                        stepSize: 1
-                        onMoved: { if (clusterTarget) clusterTarget.terrainPitchDeg = value; }
+                        from: 0
+                        to: 3500
+                        value: clusterTarget ? clusterTarget.elevationM : 1250
+                        stepSize: 25
+                        onMoved: { if (clusterTarget) clusterTarget.elevationM = Math.round(value); }
                     }
                 }
 
-                // Roll
-                Column {
-                    width: (parent.width - 14) / 2
-                    spacing: 4
-                    Row {
-                        width: parent.width
-                        Text { text: "Roll Angle"; font.pixelSize: 11; font.weight: Font.Bold; color: "#CBD5E1" }
-                        Item { Layout.fillWidth: true; width: 10 }
-                        Text {
-                            text: (clusterTarget ? (clusterTarget.terrainRollDeg >= 0 ? "+" : "") + Math.round(clusterTarget.terrainRollDeg) : "-3") + "°"
-                            font.pixelSize: 12; font.weight: Font.Bold; color: "#38BDF8"
+                // Off-Road Pitch & Roll Sliders
+                Row {
+                    width: parent.width
+                    spacing: 14
+
+                    // Pitch
+                    Column {
+                        width: (parent.width - 14) / 2
+                        spacing: 4
+                        Row {
+                            width: parent.width
+                            Text { text: "Pitch Angle"; font.pixelSize: 11; font.weight: Font.Bold; color: "#CBD5E1" }
+                            Item { Layout.fillWidth: true; width: 10 }
+                            Text {
+                                text: (clusterTarget ? (clusterTarget.terrainPitchDeg >= 0 ? "+" : "") + Math.round(clusterTarget.terrainPitchDeg) : "+8") + "°"
+                                font.pixelSize: 12; font.weight: Font.Bold; color: "#38BDF8"
+                            }
+                        }
+                        Slider {
+                            width: parent.width
+                            from: -25; to: 25
+                            value: clusterTarget ? clusterTarget.terrainPitchDeg : 8
+                            stepSize: 1
+                            onMoved: { if (clusterTarget) clusterTarget.terrainPitchDeg = value; }
                         }
                     }
-                    Slider {
-                        width: parent.width
-                        from: -25; to: 25
-                        value: clusterTarget ? clusterTarget.terrainRollDeg : -3
-                        stepSize: 1
-                        onMoved: { if (clusterTarget) clusterTarget.terrainRollDeg = value; }
+
+                    // Roll
+                    Column {
+                        width: (parent.width - 14) / 2
+                        spacing: 4
+                        Row {
+                            width: parent.width
+                            Text { text: "Roll Angle"; font.pixelSize: 11; font.weight: Font.Bold; color: "#CBD5E1" }
+                            Item { Layout.fillWidth: true; width: 10 }
+                            Text {
+                                text: (clusterTarget ? (clusterTarget.terrainRollDeg >= 0 ? "+" : "") + Math.round(clusterTarget.terrainRollDeg) : "-3") + "°"
+                                font.pixelSize: 12; font.weight: Font.Bold; color: "#38BDF8"
+                            }
+                        }
+                        Slider {
+                            width: parent.width
+                            from: -25; to: 25
+                            value: clusterTarget ? clusterTarget.terrainRollDeg : -3
+                            stepSize: 1
+                            onMoved: { if (clusterTarget) clusterTarget.terrainRollDeg = value; }
+                        }
                     }
                 }
             }

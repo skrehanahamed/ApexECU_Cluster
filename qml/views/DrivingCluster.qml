@@ -262,17 +262,57 @@ Item {
     property bool isSelfTestRunning:  false
 
     // ═══════════════════════════════════════════════════════════════
-    // NAVIGATION TELEMETRY
+    // NAVIGATION TELEMETRY (C++ NATIVE CONTROLLER SYNC)
     // ═══════════════════════════════════════════════════════════════
-    property bool navActive:          true
-    property string navState:         "GUIDING" // "GUIDING", "RECALCULATING", "ARRIVED", "GPS_LOST"
-    property string navManeuver:      "turn_right" // "turn_right", "turn_left", "slight_right", "slight_left", "sharp_right", "sharp_left", "u_turn", "straight", "roundabout"
-    property string navDistance:      "350 m"
-    property string navStreet:        "MG Road"
-    property string navDuration:      "14 min"
-    property string navRemainingKm:   "8.4 km"
-    property string navEta:           computeNavEta(14)
-    property bool gpsLost:            false
+    property bool navActive:          typeof navigationController !== "undefined" ? navigationController.navActive : true
+    property string navState:         typeof navigationController !== "undefined" ? navigationController.navState : "GUIDING"
+    property string navManeuver:      typeof navigationController !== "undefined" ? navigationController.navManeuver : "straight"
+    property string navDistance:      typeof navigationController !== "undefined" ? navigationController.navDistance : "650 m"
+    property string navStreet:        typeof navigationController !== "undefined" ? navigationController.navStreet : "Mahatma Gandhi Road"
+    property string navDuration:      typeof navigationController !== "undefined" ? navigationController.navDuration : "14 min"
+    property string navRemainingKm:   typeof navigationController !== "undefined" ? navigationController.navRemainingKm : "8.4 km"
+    property string navEta:           typeof navigationController !== "undefined" ? navigationController.navEta : computeNavEta(14)
+    property bool gpsLost:            typeof navigationController !== "undefined" ? navigationController.gpsLost : false
+
+    Connections {
+        target: typeof navigationController !== "undefined" ? navigationController : null
+
+        function onNavActiveChanged() {
+            if (typeof navigationController !== "undefined") navActive = navigationController.navActive;
+        }
+        function onNavStateChanged() {
+            if (typeof navigationController !== "undefined") navState = navigationController.navState;
+        }
+        function onNavManeuverChanged() {
+            if (typeof navigationController !== "undefined") navManeuver = navigationController.navManeuver;
+        }
+        function onNavDistanceChanged() {
+            if (typeof navigationController !== "undefined") navDistance = navigationController.navDistance;
+        }
+        function onNavStreetChanged() {
+            if (typeof navigationController !== "undefined") navStreet = navigationController.navStreet;
+        }
+        function onNavDurationChanged() {
+            if (typeof navigationController !== "undefined") navDuration = navigationController.navDuration;
+        }
+        function onNavRemainingKmChanged() {
+            if (typeof navigationController !== "undefined") navRemainingKm = navigationController.navRemainingKm;
+        }
+        function onNavEtaChanged() {
+            if (typeof navigationController !== "undefined") navEta = navigationController.navEta;
+        }
+        function onCompassHeadingChanged() {
+            if (typeof navigationController !== "undefined") compassHeading = navigationController.compassHeading;
+        }
+        function onGpsLostChanged() {
+            if (typeof navigationController !== "undefined") gpsLost = navigationController.gpsLost;
+        }
+        function onDestinationReached() {
+            if (typeof clusterAudio !== "undefined" && drivingCluster.opacity > 0.5) {
+                clusterAudio.playWarningAlertChime();
+            }
+        }
+    }
 
     function computeNavEta(durationMinutes) {
         var d = new Date(Date.now() + (durationMinutes || 14) * 60000);
