@@ -6,6 +6,7 @@
 [![C++17](https://img.shields.io/badge/Standard-C%2B%2B17-00599C?style=flat&logo=c%2B%2B&logoColor=white)](https://isocpp.org/)
 [![CMake](https://img.shields.io/badge/Build-CMake-064F8C?style=flat&logo=cmake&logoColor=white)](https://cmake.org/)
 [![Platform](https://img.shields.io/badge/Platform-macOS%20%7C%20Linux%20%7C%20Windows-lightgrey.svg)](https://github.com/)
+[![YouTube Demo](https://img.shields.io/badge/YouTube-Video%20Demo-FF0000.svg?style=flat&logo=youtube&logoColor=white)](https://youtu.be/8DDDjQ5a3yY)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 An ultra-modern, production-grade automotive digital instrument cluster and interactive ECU hardware-in-the-loop (HIL) simulation suite designed for luxury electric vehicles (EV). Built natively using **Qt 6 / QML** and high-performance **C++17**, featuring real-time 3-lane ADAS road perception, full-screen cinematic EV charging, 21 OEM telltales, comprehensive telemetry gauges, 6-door safety interlocks, synthesized audio chimes, and an interactive real-time map navigation engine with native C++ telemetry synchronization.
@@ -18,7 +19,14 @@ An ultra-modern, production-grade automotive digital instrument cluster and inte
 
 ### Application Demo Video
 
-https://youtu.be/8DDDjQ5a3yY
+<p align="center">
+  <a href="https://www.youtube.com/watch?v=8DDDjQ5a3yY" target="_blank" title="Watch APEX EV Digital Instrument Cluster Demonstration on YouTube">
+    <img src="https://img.youtube.com/vi/8DDDjQ5a3yY/maxresdefault.jpg" alt="APEX EV Digital Instrument Cluster Demonstration" width="100%" />
+  </a>
+</p>
+<p align="center">
+  <b><a href="https://www.youtube.com/watch?v=8DDDjQ5a3yY" target="_blank">Click here to watch the full application demonstration on YouTube</a></b>
+</p>
 
 ### User Interface Screenshots
 
