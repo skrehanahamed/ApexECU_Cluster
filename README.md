@@ -18,7 +18,7 @@ An ultra-modern, production-grade automotive digital instrument cluster and inte
 
 ### Application Demo Video
 
-https://github.com/user-attachments/assets/64170b31-a5b3-4ab9-87de-2bc2024274be
+https://youtu.be/8DDDjQ5a3yY
 
 ### User Interface Screenshots
 
